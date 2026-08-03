@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trayecto de Ingreso · Plataforma de estudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6FB;--ink:#171B2C;--ink-soft:#4A5069;
+    --indigo:#4B47B8;--indigo-deep:#322E8A;--lav:#ECEBFA;--lav-line:#D9D7F2;
+    --amber:#E8951C;--green:#1F9E6E;--green-bg:#E6F6EF;--red:#D64550;--red-bg:#FBEAEC;
+    --surface:#FFFFFF;--shadow:0 10px 30px -14px rgba(23,27,44,.28);--radius:16px;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;line-height:1.2;margin:0}
+  code,.mono{font-family:var(--mono)}
+
+  header.top{background:linear-gradient(135deg,var(--indigo-deep),var(--indigo));color:#fff;
+    padding:22px clamp(16px,4vw,40px) 0;position:relative;overflow:hidden}
+  header.top .bits{position:absolute;inset:0;font-family:var(--mono);font-size:13px;color:#fff;
+    opacity:.08;letter-spacing:2px;line-height:1.9;user-select:none;pointer-events:none;
+    word-break:break-all;padding:14px}
+  .brand{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+  .glyph{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;flex:none;
+    font-family:var(--mono);font-weight:600;font-size:17px}
+  .brand h1{font-size:clamp(18px,2.6vw,23px);font-weight:700;letter-spacing:-.3px}
+  .brand p{margin:2px 0 0;font-size:13px;opacity:.82}
+  nav.tabs{position:relative;z-index:1;display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;padding-bottom:2px}
+  nav.tabs button{appearance:none;border:none;cursor:pointer;font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:14px;color:#Eceafd;background:rgba(255,255,255,.08);
+    padding:11px 16px;border-radius:12px 12px 0 0;transition:.15s}
+  nav.tabs button:hover{background:rgba(255,255,255,.18)}
+  nav.tabs button.active{background:var(--bg);color:var(--indigo-deep)}
+  nav.tabs button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+  main{max-width:940px;margin:0 auto;padding:clamp(20px,4vw,42px) clamp(16px,4vw,40px) 80px}
+  section.view{display:none}
+  section.view.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .lead{font-size:17px;color:var(--ink-soft);max-width:72ch}
+  h2.title{font-size:clamp(24px,4vw,32px);letter-spacing:-.5px;margin-bottom:6px}
+  .eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--indigo);margin-bottom:10px}
+  h3.block{font-size:20px;margin:34px 0 10px;padding-left:14px;border-left:4px solid var(--amber);letter-spacing:-.3px}
+  p{margin:10px 0}
+  .card{background:var(--surface);border:1px solid var(--lav-line);border-radius:var(--radius);
+    padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+  .def{background:var(--lav);border:1px solid var(--lav-line);border-radius:12px;padding:14px 16px;margin:14px 0}
+  .def b{color:var(--indigo-deep)}
+  .criollo{border-left:4px solid var(--indigo);background:#fff;border-radius:0 12px 12px 0;
+    padding:12px 16px;margin:14px 0;box-shadow:var(--shadow)}
+  .criollo .tag,.tip .tag,.bridge .tag{font-family:var(--mono);font-size:11px;font-weight:600;
+    letter-spacing:1px;text-transform:uppercase}
+  .criollo .tag{color:var(--indigo)}
+  .tip{background:#FFF6E7;border:1px solid #F3D9A6;border-radius:12px;padding:12px 16px;margin:14px 0}
+  .tip .tag{color:var(--amber)}
+  .bridge{background:var(--green-bg);border:1px solid #BFE6D5;border-radius:12px;padding:12px 16px;margin:14px 0}
+  .bridge .tag{color:var(--green)}
+  .worked{background:#FBFBFE;border:1px dashed var(--lav-line);border-radius:12px;padding:14px 18px;margin:14px 0}
+  .worked .step{font-family:var(--mono);font-size:14px;margin:4px 0;color:var(--ink)}
+  .fx{font-family:var(--mono);font-weight:600;background:var(--lav);padding:1px 6px;border-radius:5px;color:var(--indigo-deep)}
+  ul.clean{margin:10px 0;padding-left:20px}
+  ul.clean li{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--lav-line);padding:8px 10px;text-align:center}
+  th{background:var(--lav);font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--indigo-deep)}
+  td.mono,th.mono{font-family:var(--mono)}
+  .laws td:first-child{text-align:left;font-weight:600}
+  .bit{display:inline-block;min-width:20px;font-family:var(--mono);font-weight:600;padding:1px 7px;border-radius:6px}
+  .bit.one{background:var(--green-bg);color:var(--green)}
+  .bit.zero{background:#EEF0F6;color:var(--ink-soft)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  svg.plot{width:100%;max-width:420px;height:auto;display:block;margin:8px auto}
+
+  .home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px}
+  .home-card{background:var(--surface);border:1px solid var(--lav-line);border-radius:var(--radius);
+    padding:20px;box-shadow:var(--shadow);cursor:pointer;transition:.16s;text-align:left;font:inherit;color:inherit}
+  .home-card:hover{transform:translateY(-3px);border-color:var(--indigo)}
+  .home-card .k{font-family:var(--mono);font-size:12px;color:var(--indigo);font-weight:600}
+  .home-card h4{font-size:18px;margin:8px 0 6px}
+  .home-card p{font-size:14px;color:var(--ink-soft);margin:0}
+  .home-card:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .home-card .go{display:inline-block;margin-top:12px;font-family:'Space Grotesk';font-weight:600;
+    font-size:13px;color:var(--indigo)}
+  .home-card.hard{border-color:#F1AEB3;background:#FFF7F8}
+  .home-card.hard:hover{border-color:var(--red)}
+  .home-card.hard .go{color:var(--red)}
+  .badge-hard{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:1px;
+    text-transform:uppercase;color:#fff;background:var(--red);padding:4px 11px;border-radius:999px;margin-bottom:10px}
+  .exam-head.hard{border-color:#F1AEB3;border-top:5px solid var(--red)}
+  .q.hard .q-num{background:var(--red)}
+
+  .back-btn{background:#fff;border:1.5px solid var(--lav-line);color:var(--indigo-deep);
+    font-family:'Space Grotesk';font-weight:600;font-size:14px;padding:8px 14px;border-radius:10px;
+    cursor:pointer;margin-bottom:14px}
+  .back-btn:hover{border-color:var(--indigo)}
+
+  .exam-head{background:var(--surface);border:1px solid var(--lav-line);border-radius:var(--radius);
+    padding:18px 20px;box-shadow:var(--shadow);margin-bottom:18px}
+  .exam-head h3{font-size:21px}
+  .exam-head p{margin:6px 0 0;color:var(--ink-soft);font-size:14px}
+  .counter{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:13px;font-weight:600;
+    color:var(--indigo);background:var(--lav);padding:4px 10px;border-radius:8px}
+  .q{background:var(--surface);border:1px solid var(--lav-line);border-radius:var(--radius);
+    padding:16px 18px;margin:12px 0;box-shadow:var(--shadow)}
+  .q-text{font-weight:600;font-size:16px;margin:0 0 12px;display:flex;gap:10px;align-items:baseline}
+  .q-num{font-family:var(--mono);font-size:13px;color:#fff;background:var(--indigo);min-width:28px;height:28px;
+    border-radius:8px;display:inline-grid;place-items:center;flex:none}
+  .opt{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1.5px solid var(--lav-line);
+    border-radius:11px;margin:7px 0;cursor:pointer;transition:.13s;background:#fff}
+  .opt:hover{border-color:var(--indigo);background:#FAFAFF}
+  .opt input{position:absolute;opacity:0;width:0;height:0}
+  .opt-mark{font-family:var(--mono);font-weight:600;font-size:13px;width:26px;height:26px;flex:none;
+    border-radius:7px;display:grid;place-items:center;background:var(--lav);color:var(--indigo-deep)}
+  .opt-text{font-size:15px}
+  .opt input:checked + .opt-mark{background:var(--indigo);color:#fff}
+  .opt:has(input:checked){border-color:var(--indigo);background:#F4F3FF}
+  .opt.correct{border-color:var(--green);background:var(--green-bg)}
+  .opt.correct .opt-mark{background:var(--green);color:#fff}
+  .opt.incorrect{border-color:var(--red);background:var(--red-bg)}
+  .opt.incorrect .opt-mark{background:var(--red);color:#fff}
+  .opt.locked{cursor:default;pointer-events:none}
+  .feedback{margin-top:10px;padding:10px 13px;border-radius:10px;font-size:14px}
+  .feedback.fb-ok{background:var(--green-bg);color:#146b4c}
+  .feedback.fb-no{background:var(--red-bg);color:#a02c35}
+  .exam-actions{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+  .btn-primary{background:var(--indigo);color:#fff;border:none;font-family:'Space Grotesk';font-weight:600;
+    font-size:15px;padding:13px 22px;border-radius:12px;cursor:pointer;transition:.15s}
+  .btn-primary:hover{background:var(--indigo-deep)}
+  .btn-ghost{background:#fff;color:var(--indigo-deep);border:1.5px solid var(--lav-line);
+    font-family:'Space Grotesk';font-weight:600;font-size:15px;padding:13px 22px;border-radius:12px;cursor:pointer}
+  .btn-ghost:hover{border-color:var(--indigo)}
+  button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .result{background:var(--surface);border:1px solid var(--lav-line);border-radius:var(--radius);
+    padding:22px;box-shadow:var(--shadow);margin-top:8px;display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+  .ring{flex:none}
+  .result .msg h4{font-size:20px;margin-bottom:4px}
+  .result .msg p{margin:0;color:var(--ink-soft);font-size:15px}
+  .score-txt{font-family:'Space Grotesk';font-weight:700}
+  footer{max-width:940px;margin:0 auto;padding:20px clamp(16px,4vw,40px) 40px;color:var(--ink-soft);font-size:13px}
+  @media(max-width:560px){.q-text{font-size:15px}.opt-text{font-size:14px}
+    nav.tabs button{font-size:13px;padding:10px 12px}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bits" aria-hidden="true">01000010 01101001 01101110 01100001 01110010 01101001 01101111 00100000 f(x)=mx+b 00100000 01000001 01001110 01000100 00100000 01001111 01010010 00100000 11001010 10110100 00100000 Δx/Δ 00100000 01001110 01001111 01010100</div>
+  <div class="brand">
+    <div class="glyph">ƒ&nbsp;∧</div>
+    <div>
+      <h1>Trayecto de Ingreso</h1>
+      <p>Plataforma de estudio · Matemática · Pensamiento Computacional · Lengua</p>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="active" data-tab="inicio">Inicio</button>
+    <button data-tab="funciones">Funciones</button>
+    <button data-tab="boole">Álgebra de Boole</button>
+    <button data-tab="lengua">Lengua</button>
+    <button data-tab="pc">Pensamiento Comp.</button>
+    <button data-tab="examenes">Exámenes (20)</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ INICIO ============ -->
+<section class="view active" id="inicio">
+  <div class="eyebrow">Bienvenida</div>
+  <h2 class="title">Tu plataforma para llegar listo/a al ingreso</h2>
+  <p class="lead">Teoría de las cuatro áreas (<b>Funciones</b>, <b>Álgebra de Boole</b>, <b>Lengua</b> y <b>Pensamiento Computacional</b>) al alcance para consultar cualquier concepto, y <b>20 exámenes de 20 preguntas cada uno</b>. Los 10 en rojo son de <b>dificultad real (nivel ingreso)</b>. Corrección automática con explicación e intentos ilimitados.</p>
+  <div class="home-grid">
+    <button class="home-card" data-goto="funciones">
+      <div class="k">TEORÍA · 01</div><h4>Funciones</h4>
+      <p>Función lineal, pendiente, ordenada al origen, raíces y más.</p><span class="go">Leer teoría →</span>
+    </button>
+    <button class="home-card" data-goto="boole">
+      <div class="k">TEORÍA · 02</div><h4>Álgebra de Boole</h4>
+      <p>Valores 0/1, AND, OR, NOT, tablas de verdad y De Morgan.</p><span class="go">Leer teoría →</span>
+    </button>
+    <button class="home-card" data-goto="lengua">
+      <div class="k">TEORÍA · 03</div><h4>Lengua</h4>
+      <p>Narración, conflicto, marcadores y la caja de estrategias de lectura y escritura.</p><span class="go">Leer teoría →</span>
+    </button>
+    <button class="home-card" data-goto="pc">
+      <div class="k">TEORÍA · 04</div><h4>Pensamiento Computacional</h4>
+      <p>Wing, la metáfora input/proceso/output y las cinco habilidades.</p><span class="go">Leer teoría →</span>
+    </button>
+    <button class="home-card" data-goto="examenes">
+      <div class="k">PRÁCTICA · 20 × 20</div><h4>Exámenes</h4>
+      <p>400 preguntas en total: 10 por tema y 10 integradores de repaso general.</p><span class="go">Ver exámenes →</span>
+    </button>
+  </div>
+  <div class="tip" style="margin-top:22px">
+    <div class="tag">Cómo usarla</div>
+    Elegí un examen, respondé las 20 preguntas y tocá <b>Corregir</b>. Vas a ver qué acertaste, la explicación de cada una y tu puntaje. Podés <b>reiniciar</b> y repetir las veces que quieras: nada se guarda.
+  </div>
+</section>
+
+<!-- ============ FUNCIONES ============ -->
+<section class="view" id="funciones">
+  <div class="eyebrow">Teoría 01</div>
+  <h2 class="title">Funciones</h2>
+  <p class="lead">Una función es, en el fondo, una <b>regla que transforma números</b>: entra algo, se procesa, sale un resultado.</p>
+
+  <h3 class="block">1. ¿Qué es una función?</h3>
+  <p>Pensala como una <b>máquina</b>: le entregás un número (la entrada), le aplica una regla y devuelve exactamente un resultado (la salida).</p>
+  <div class="def"><b>Definición.</b> Una función asigna a cada valor de entrada <b>un único</b> valor de salida. Para un mismo número de entrada nunca puede haber dos resultados distintos.</div>
+  <div class="bridge"><div class="tag">Puente con Pensamiento Computacional</div> Es la metáfora <b>input → proceso → output</b>: la entrada es <span class="fx">x</span>, el proceso es la regla y la salida es <span class="fx">y</span>.</div>
+
+  <h3 class="block">2. Vocabulario</h3>
+  <ul class="clean">
+    <li><b>Variable independiente</b> <span class="fx">x</span>: la entrada (la elegís vos).</li>
+    <li><b>Variable dependiente</b> <span class="fx">y = f(x)</span>: la salida (depende de x).</li>
+    <li><b>Dominio:</b> todos los valores que puede tomar x.</li>
+    <li><b>Imagen</b> (rango): todos los valores que salen (y).</li>
+    <li><b>Notación</b> <span class="fx">f(x)</span>: “f de x”. <span class="fx">f(3)</span> es el resultado cuando x vale 3.</li>
+  </ul>
+
+  <h3 class="block">3. Cómo evaluar una función</h3>
+  <p>Reemplazás la x por un número y calculás, respetando la jerarquía de operaciones.</p>
+  <div class="worked"><div class="step">f(x) = 3x − 5</div><div class="step">f(4) = 3·4 − 5 = 12 − 5 = <b>7</b></div>
+    <div class="step" style="color:var(--ink-soft)">f(0) = −5 &nbsp;·&nbsp; f(−2) = 3·(−2) − 5 = −11</div></div>
+  <div class="tip"><div class="tag">Ojo</div> Con negativos, poné paréntesis: <span class="fx">3·(−2)</span>.</div>
+
+  <h3 class="block">4. Función lineal</h3>
+  <div class="def"><b>Forma:</b> <span class="fx">f(x) = m·x + b</span>. Su gráfico es <b>siempre una recta</b>.</div>
+  <ul class="clean">
+    <li><b>m = pendiente:</b> <span class="fx">m&gt;0</span> creciente (sube), <span class="fx">m&lt;0</span> decreciente (baja), <span class="fx">m=0</span> constante.</li>
+    <li><b>b = ordenada al origen:</b> el punto <span class="fx">(0, b)</span> donde corta el eje y.</li>
+  </ul>
+  <svg class="plot" viewBox="0 0 360 260" role="img" aria-label="Recta f(x)=2x+1">
+    <line x1="30" y1="230" x2="340" y2="230" stroke="#B9BAC9" stroke-width="1.5"/>
+    <line x1="60" y1="20" x2="60" y2="250" stroke="#B9BAC9" stroke-width="1.5"/>
+    <text x="332" y="248" font-family="IBM Plex Mono" font-size="12" fill="#4A5069">x</text>
+    <text x="42" y="28" font-family="IBM Plex Mono" font-size="12" fill="#4A5069">y</text>
+    <line x1="35" y1="245" x2="320" y2="55" stroke="#4B47B8" stroke-width="3"/>
+    <circle cx="60" cy="210" r="5" fill="#E8951C"/>
+    <text x="68" y="205" font-family="IBM Plex Mono" font-size="12" fill="#322E8A">(0, 1) = b</text>
+    <text x="230" y="120" font-family="IBM Plex Mono" font-size="12" fill="#4B47B8">f(x)=2x+1</text>
+  </svg>
+  <div class="bridge"><div class="tag">Puente con lo que ya viste</div> En las ecuaciones con dos incógnitas, al <b>despejar la y</b> obtenías <span class="fx">y = m·x + b</span>: una función lineal cuyas soluciones dibujan una recta.</div>
+
+  <h3 class="block">5. Raíz o cero</h3>
+  <div class="def">Es el valor de x donde <span class="fx">f(x) = 0</span> (donde la recta corta el eje x). Se busca resolviendo una ecuación de primer grado.</div>
+  <div class="worked"><div class="step">f(x) = 2x − 8 → 2x − 8 = 0 → x = <b>4</b></div></div>
+
+  <h3 class="block">6. Casos particulares y cuadrática</h3>
+  <div class="grid2">
+    <div class="card"><b>Constante:</b> f(x) = b (m=0). Recta horizontal.</div>
+    <div class="card"><b>Proporcionalidad directa:</b> f(x) = m·x (b=0). Pasa por (0,0).</div>
+  </div>
+  <p>Cuando la x está <b>al cuadrado</b> es cuadrática: <span class="fx">f(x) = ax² + bx + c</span>. Su gráfico es una <b>parábola</b>. Ej: f(x) = x² − 9 → f(−3) = 9 − 9 = 0.</p>
+  <div class="tip"><div class="tag">Leer un gráfico</div> Corte con eje y → b. Cortes con eje x → raíces. Sube = creciente; baja = decreciente.</div>
+</section>
+
+<!-- ============ BOOLE ============ -->
+<section class="view" id="boole">
+  <div class="eyebrow">Teoría 02</div>
+  <h2 class="title">Álgebra de Boole</h2>
+  <p class="lead">El álgebra que usa <b>solo dos valores</b>: 1 (verdadero) y 0 (falso). Es la base de la lógica de las computadoras.</p>
+
+  <h3 class="block">1. ¿Qué es y de dónde viene?</h3>
+  <p>La creó <b>George Boole</b> en el siglo XIX. Mientras el álgebra común usa infinitos números, esta usa solo <span class="bit one">1</span> y <span class="bit zero">0</span>.</p>
+  <div class="bridge"><div class="tag">Puente con el binario</div> Los circuitos tienen dos estados: encendido y apagado, como las casillas de la máquina de Marcos. Por eso Boole es el idioma de la lógica digital.</div>
+
+  <h3 class="block">2. Las tres operaciones básicas</h3>
+  <div class="grid2">
+    <div class="card"><b>NOT — negación</b> <span class="mono">(¬A)</span><p style="margin:6px 0;color:var(--ink-soft);font-size:14px">Invierte el valor.</p>
+      <table><tr><th class="mono">A</th><th class="mono">¬A</th></tr>
+      <tr><td><span class="bit zero">0</span></td><td><span class="bit one">1</span></td></tr>
+      <tr><td><span class="bit one">1</span></td><td><span class="bit zero">0</span></td></tr></table></div>
+    <div class="card"><b>AND</b> <span class="mono">(A·B)</span><p style="margin:6px 0;color:var(--ink-soft);font-size:14px">1 solo si <b>ambos</b> son 1.</p>
+      <table><tr><th class="mono">A</th><th class="mono">B</th><th class="mono">A·B</th></tr>
+      <tr><td><span class="bit zero">0</span></td><td><span class="bit zero">0</span></td><td><span class="bit zero">0</span></td></tr>
+      <tr><td><span class="bit zero">0</span></td><td><span class="bit one">1</span></td><td><span class="bit zero">0</span></td></tr>
+      <tr><td><span class="bit one">1</span></td><td><span class="bit zero">0</span></td><td><span class="bit zero">0</span></td></tr>
+      <tr><td><span class="bit one">1</span></td><td><span class="bit one">1</span></td><td><span class="bit one">1</span></td></tr></table></div>
+    <div class="card"><b>OR</b> <span class="mono">(A+B)</span><p style="margin:6px 0;color:var(--ink-soft);font-size:14px">1 si <b>al menos uno</b> es 1.</p>
+      <table><tr><th class="mono">A</th><th class="mono">B</th><th class="mono">A+B</th></tr>
+      <tr><td><span class="bit zero">0</span></td><td><span class="bit zero">0</span></td><td><span class="bit zero">0</span></td></tr>
+      <tr><td><span class="bit zero">0</span></td><td><span class="bit one">1</span></td><td><span class="bit one">1</span></td></tr>
+      <tr><td><span class="bit one">1</span></td><td><span class="bit zero">0</span></td><td><span class="bit one">1</span></td></tr>
+      <tr><td><span class="bit one">1</span></td><td><span class="bit one">1</span></td><td><span class="bit one">1</span></td></tr></table></div>
+  </div>
+  <div class="criollo"><div class="tag">En criollo</div> <b>AND</b> es la “y” exigente (quiere las dos), <b>OR</b> es la “o” generosa (con una alcanza), <b>NOT</b> es el “no” (da vuelta todo).</div>
+
+  <h3 class="block">3. Leyes principales</h3>
+  <table class="laws">
+    <tr><th>Ley</th><th class="mono">Con AND (·)</th><th class="mono">Con OR (+)</th></tr>
+    <tr><td>Identidad</td><td class="mono">A · 1 = A</td><td class="mono">A + 0 = A</td></tr>
+    <tr><td>Dominación</td><td class="mono">A · 0 = 0</td><td class="mono">A + 1 = 1</td></tr>
+    <tr><td>Complemento</td><td class="mono">A · Ā = 0</td><td class="mono">A + Ā = 1</td></tr>
+    <tr><td>Idempotencia</td><td class="mono">A · A = A</td><td class="mono">A + A = A</td></tr>
+  </table>
+
+  <h3 class="block">4. Leyes de De Morgan</h3>
+  <div class="def"><div class="mono" style="font-weight:600;color:var(--indigo-deep)">¬(A · B) = ¬A + ¬B</div>
+    <div class="mono" style="font-weight:600;color:var(--indigo-deep);margin-top:4px">¬(A + B) = ¬A · ¬B</div></div>
+  <p><b>En palabras:</b> la negación “entra” y cambia AND por OR (y viceversa), negando cada término.</p>
+</section>
+
+<!-- ============ LENGUA ============ -->
+<section class="view" id="lengua">
+  <div class="eyebrow">Teoría 03</div>
+  <h2 class="title">Lengua</h2>
+  <p class="lead">Dos grandes bloques: el <b>texto narrativo</b> (cómo se cuenta una historia) y la <b>representación y el lenguaje</b> (cómo comunicamos el pensamiento), cada uno con sus estrategias de lectura y escritura.</p>
+
+  <h3 class="block">Unidad 1 · La narración</h3>
+  <p>La narración es la manera de <b>contar una secuencia de acciones</b> realizadas por personajes a lo largo de un intervalo de tiempo, dentro de una situación comunicativa.</p>
+  <div class="def"><b>Los 6 elementos del texto narrativo:</b>
+    <ul class="clean" style="margin-top:8px">
+      <li><b>Narrador:</b> protagonista (participa de la acción) u omnisciente (ajeno, lo sabe todo).</li>
+      <li><b>Tiempo y espacio:</b> en qué lugar y época ocurre la historia.</li>
+      <li><b>Trama:</b> los sucesos que dan pie a la problemática.</li>
+      <li><b>Acción:</b> lo que hacen los personajes (verbos de acción).</li>
+      <li><b>Marcadores textuales:</b> conectores temporales y de causa-efecto.</li>
+      <li><b>Personajes:</b> definidos por rasgos físicos y psicológicos.</li>
+    </ul></div>
+  <p>Modificar cualquiera de estos elementos cambia la historia. La narración se organiza en una <b>estructura de tres partes</b> que hace evolucionar la trama de un punto a otro.</p>
+  <div class="criollo"><div class="tag">Clave</div> El <b>conflicto</b> es el <b>motor de la historia</b>: organiza los hechos, los direcciona y abre interrogantes.</div>
+
+  <h4 style="margin-top:22px">Marcadores, conectores y adverbios de tiempo</h4>
+  <ul class="clean">
+    <li><b>Conectores temporales:</b> introducen construcciones de tiempo (preposiciones como <i>desde, hasta, tras</i>; locuciones como <i>en primer lugar, al comienzo</i>).</li>
+    <li><b>Marcadores temporales:</b> con su sola mención ubican una escena (<i>ayer, hoy, mañana, anoche, la próxima semana</i>).</li>
+    <li><b>Adverbios de tiempo:</b> complementan al verbo y son <b>invariables</b> (no se conjugan): <i>antes, después, luego, siempre</i>.</li>
+  </ul>
+  <div class="bridge"><div class="tag">En la formación superior</div> La narrativa sirve para comunicar, transmitir sentidos y consensuar decisiones a lo largo de toda la cursada.</div>
+
+  <h3 class="block">Unidad 2 · Representación y lenguaje</h3>
+  <p>Nuestros pensamientos se proyectan hacia los demás mediante <b>representaciones</b>, y eso hace posible la comunicación. Hay muchos <b>modos de representación</b> —pintura, música, danza, poesía, cine—: visuales, auditivos, táctiles, y cada uno revela y oculta sentidos.</p>
+  <div class="def"><b>El lenguaje</b> es la facultad de expresarnos y comunicarnos. Puede ser:
+    <ul class="clean" style="margin-top:8px">
+      <li><b>Verbal:</b> con palabras, oral o escrita (la forma más frecuente).</li>
+      <li><b>No verbal:</b> con otros signos (gestos, señales de tránsito, imágenes, sonidos).</li>
+    </ul></div>
+  <p>Esa gran trama se nutre de la <b>oralidad</b>, las <b>imágenes</b> (que no son un reflejo fiel de la realidad, sino imágenes mentales), la <b>escritura</b> (un discurso autónomo, separado de su autor) y los <b>píxeles</b> (lo audiovisual, que exige pensamiento crítico para decodificar los mensajes).</p>
+
+  <h4 style="margin-top:22px">Caja de estrategias (lectura y escritura)</h4>
+  <div class="grid2">
+    <div class="card"><b>Lectura anticipatoria</b><br><span style="color:var(--ink-soft)">Mirar título, imágenes y epígrafe antes de leer todo, para intuir el tema.</span></div>
+    <div class="card"><b>Paráfrasis</b><br><span style="color:var(--ink-soft)">Reconstruir el sentido de un texto con nuestras propias palabras.</span></div>
+    <div class="card"><b>Hipérbole</b><br><span style="color:var(--ink-soft)">Exagerar como recurso. <i>Ej: “te llamé un millón de veces”.</i></span></div>
+    <div class="card"><b>Organización textual</b><br><span style="color:var(--ink-soft)">Usar títulos y subtítulos para jerarquizar qué es más y qué menos importante.</span></div>
+    <div class="card"><b>Conectores de orden</b><br><span style="color:var(--ink-soft)">Ordenar el texto: <i>primero, luego, a continuación, por último</i>.</span></div>
+    <div class="card"><b>Comprender significados</b><br><span style="color:var(--ink-soft)">Deducir una palabra por el contexto y confirmar la acepción correcta en el diccionario.</span></div>
+  </div>
+</section>
+
+<!-- ============ PENSAMIENTO COMPUTACIONAL ============ -->
+<section class="view" id="pc">
+  <div class="eyebrow">Teoría 04</div>
+  <h2 class="title">Pensamiento Computacional</h2>
+  <p class="lead">Una forma de pensar para resolver problemas: descomponerlos, encontrar patrones, quedarse con lo esencial y armar una secuencia de pasos. No es programar (aunque programar lo usa).</p>
+
+  <h3 class="block">1. ¿Qué es?</h3>
+  <p>El pensamiento computacional <b>existe desde mucho antes que las computadoras</b>: es una capacidad humana. Usarlo no significa escribir código; la programación lo necesita, pero su aplicación es mucho más amplia y cotidiana.</p>
+  <div class="def"><b>Definición (Jeannette M. Wing).</b> Es el proceso de pensamiento que interviene al <b>formular un problema</b> y <b>expresar su solución</b> de un modo que pueda ser llevado a cabo por un procesador de información (una persona, una máquina, o ambas).</div>
+
+  <h3 class="block">2. La metáfora del ordenador</h3>
+  <p>Resolver un problema se parece a cómo trabaja una computadora:</p>
+  <div class="grid2">
+    <div class="card"><b>Input</b><br><span style="color:var(--ink-soft)">Recibimos el problema (los datos, el planteo).</span></div>
+    <div class="card"><b>Proceso</b><br><span style="color:var(--ink-soft)">Pensamos y transformamos esa información.</span></div>
+    <div class="card"><b>Output</b><br><span style="color:var(--ink-soft)">Llegamos a la solución.</span></div>
+  </div>
+  <div class="tip"><div class="tag">Ojo</div> La metáfora <b>termina</b> en el “proceso”: ahí intervienen la <b>abstracción, la creatividad y la emocionalidad</b>, capacidades humanas que una máquina no tiene.</div>
+  <div class="bridge"><div class="tag">Puente con Funciones</div> Es la misma idea de <span class="fx">input → f(x) → output</span>: entra un valor, se le aplica una regla y sale un resultado.</div>
+
+  <h3 class="block">3. Las cinco habilidades básicas</h3>
+  <div class="grid2">
+    <div class="card"><b>1. Pensamiento algorítmico</b><br><span style="color:var(--ink-soft)">Armar una secuencia ordenada de pasos. <i>Ej: escribir una receta paso a paso.</i></span></div>
+    <div class="card"><b>2. Descomposición</b><br><span style="color:var(--ink-soft)">Partir un problema grande en partes más chicas. <i>Ej: organizar un viaje = pasajes + hotel + itinerario.</i></span></div>
+    <div class="card"><b>3. Generalización y patrones</b><br><span style="color:var(--ink-soft)">Detectar regularidades y reutilizar soluciones. <i>Ej: notar que 2+2+2 = 2·3.</i></span></div>
+    <div class="card"><b>4. Abstracción y representación</b><br><span style="color:var(--ink-soft)">Quedarse con lo esencial e ignorar los detalles. <i>Ej: un mapa de subte que ignora las calles.</i></span></div>
+    <div class="card"><b>5. Evaluación</b><br><span style="color:var(--ink-soft)">Revisar si la solución es correcta, eficiente o mejorable.</span></div>
+  </div>
+  <div class="criollo"><div class="tag">En criollo</div> Se potencian entre sí: <b>descomponés</b>, buscás <b>patrones</b>, <b>abstraés</b> lo importante, armás el <b>algoritmo</b> y al final <b>evaluás</b> si se puede mejorar.</div>
+
+  <h3 class="block">4. Aprender resolviendo problemas</h3>
+  <p>Se practica con problemas concretos (¡hasta abrir una lata de conservas!), <b>sin necesidad de códigos ni computadoras</b>. La clave es la <b>metarreflexión</b>: “pensar sobre nuestro propio pensamiento” para reconocer qué pasos usamos y repetirlos con más agilidad la próxima vez. Sirve tanto en la vida cotidiana como en la formación académica.</p>
+</section>
+
+<!-- ============ LISTA DE EXÁMENES ============ -->
+<section class="view" id="examenes">
+  <div class="eyebrow">Práctica</div>
+  <h2 class="title">20 exámenes · 20 preguntas cada uno</h2>
+  <p class="lead">Los primeros 10 son por tema. Del 11 al 20 son integradores marcados en <b style="color:var(--red)">rojo</b>: de <b>dificultad real (nivel ingreso)</b>, con ejercicios de varios pasos. Elegí uno para empezar.</p>
+  <div class="home-grid" id="exam-list"></div>
+</section>
+
+<!-- host donde se inyectan las vistas de cada examen -->
+<div id="exam-host"></div>
+
+</main>
+
+<footer>Plataforma de práctica · Trayecto de Ingreso. Intentos ilimitados; los resultados no se guardan: cada intento arranca limpio.</footer>
+
+<script>
+/* ---------- Datos de los 10 exámenes ---------- */
+const EXAMS = {
+ e1:{title:'Examen 1 — Funciones', topic:'Funciones', intro:'20 preguntas sobre funciones lineales, evaluación, pendiente, ordenada al origen y raíces.', questions:[
+  {q:'En f(x) = 3x − 5, ¿cuánto vale f(4)?',opts:['7','2','17','−2'],correct:0,expl:'3·4 − 5 = 12 − 5 = 7.'},
+  {q:'En f(x) = mx + b, ¿qué representa b?',opts:['La pendiente','La ordenada al origen (corte con el eje y)','La raíz','El dominio'],correct:1,expl:'b es el punto (0, b) donde la recta cruza el eje y.'},
+  {q:'¿Cuál es la raíz de f(x) = 2x − 8?',opts:['4','−8','8','2'],correct:0,expl:'2x − 8 = 0 → 2x = 8 → x = 4.'},
+  {q:'Una función lineal es decreciente cuando…',opts:['m > 0','m < 0','b > 0','b < 0'],correct:1,expl:'Pendiente negativa: la recta baja.'},
+  {q:'¿En qué punto corta al eje y la función f(x) = −x + 6?',opts:['(6, 0)','(0, 6)','(0, −6)','(−6, 0)'],correct:1,expl:'En x=0: f(0)=6 → (0, 6).'},
+  {q:'¿Cuál es una función de proporcionalidad directa?',opts:['f(x) = 2x + 3','f(x) = 5x','f(x) = 7','f(x) = x − 1'],correct:1,expl:'Tiene forma f(x)=mx (b=0) y pasa por el origen.'},
+  {q:'Si f(x) = x² − 9, ¿cuánto vale f(−3)?',opts:['0','18','−18','6'],correct:0,expl:'(−3)² − 9 = 9 − 9 = 0.'},
+  {q:'El conjunto de valores que puede tomar x se llama…',opts:['Imagen','Codominio','Dominio','Pendiente'],correct:2,expl:'El dominio son las entradas; la imagen son las salidas.'},
+  {q:'La pendiente de la recta f(x) = 4x + 1 es…',opts:['1','4','0','−4'],correct:1,expl:'Es el número que multiplica a x: m = 4.'},
+  {q:'¿Cuál NO es una forma de representar una función?',opts:['Una tabla','Una fórmula','Un gráfico','Un número primo'],correct:3,expl:'Palabras, fórmula, tabla o gráfico sí; un número primo no.'},
+  {q:'En f(x) = 5x + 2, ¿cuánto vale f(0)?',opts:['2','5','7','0'],correct:0,expl:'5·0 + 2 = 2.'},
+  {q:'La imagen de una función está formada por los valores de…',opts:['x (entrada)','y (salida)','la pendiente','el dominio'],correct:1,expl:'La imagen son los resultados (y).'},
+  {q:'¿Cuál es la raíz de f(x) = −3x + 9?',opts:['3','9','−3','−9'],correct:0,expl:'−3x + 9 = 0 → 3x = 9 → x = 3.'},
+  {q:'Una función lineal con m = 0 es…',opts:['creciente','decreciente','constante','cuadrática'],correct:2,expl:'Sin pendiente, la recta es horizontal: constante.'},
+  {q:'El gráfico de una función lineal es siempre…',opts:['una parábola','una recta','un círculo','una curva'],correct:1,expl:'La función lineal siempre da una recta.'},
+  {q:'¿Cuál par (x, y) pertenece a f(x) = 2x + 1?',opts:['(3, 7)','(3, 6)','(2, 6)','(1, 4)'],correct:0,expl:'f(3) = 2·3 + 1 = 7 → (3, 7).'},
+  {q:'Si f(x) = x², ¿cuánto vale f(5)?',opts:['25','10','7','32'],correct:0,expl:'5² = 25.'},
+  {q:'En y = f(x), la variable dependiente es…',opts:['x','y','m','b'],correct:1,expl:'y depende del valor de x.'},
+  {q:'¿Cuál de estas funciones es creciente?',opts:['f(x) = −2x + 1','f(x) = 3x − 4','f(x) = −x','f(x) = 7'],correct:1,expl:'Pendiente positiva (m=3): creciente.'},
+  {q:'La ordenada al origen de f(x) = 6x es…',opts:['0','6','1','no tiene'],correct:0,expl:'No hay término independiente: b = 0 (pasa por el origen).'}
+ ]},
+
+ e2:{title:'Examen 2 — Álgebra de Boole', topic:'Álgebra de Boole', intro:'20 preguntas de lógica booleana: 0/1, AND, OR, NOT, XOR, leyes y De Morgan.', questions:[
+  {q:'¿Cuántos valores puede tomar una variable booleana?',opts:['Infinitos','Dos (0 y 1)','Diez','Tres'],correct:1,expl:'Solo 0 (falso) y 1 (verdadero).'},
+  {q:'AND (·) da 1 cuando…',opts:['Al menos una vale 1','Ambas valen 1','Ambas valen 0','Nunca'],correct:1,expl:'AND es exigente: necesita las dos en 1.'},
+  {q:'¿Cuánto vale 1 + 0 (OR)?',opts:['1','0','10','2'],correct:0,expl:'Con OR alcanza una: 1 + 0 = 1.'},
+  {q:'La negación (NOT) de 1 es…',opts:['1','0','2','−1'],correct:1,expl:'NOT invierte: ¬1 = 0.'},
+  {q:'¿Cuánto vale 1 · 1 (AND)?',opts:['2','0','1','11'],correct:2,expl:'Ambos son 1 → 1 · 1 = 1.'},
+  {q:'OR (+) da 0 solamente cuando…',opts:['Ambas valen 0','Ambas valen 1','Una vale 1','Nunca'],correct:0,expl:'OR da 0 solo si las dos son 0.'},
+  {q:'Según De Morgan, ¬(A · B) es igual a…',opts:['¬A · ¬B','¬A + ¬B','A + B','A · B'],correct:1,expl:'¬(A·B) = ¬A + ¬B (el AND pasa a OR).'},
+  {q:'El álgebra de Boole es la base de…',opts:['la cocina','la lógica digital y las computadoras','la geografía','la música'],correct:1,expl:'Circuitos y computadoras funcionan con 0 y 1.'},
+  {q:'El creador de esta álgebra fue…',opts:['Isaac Newton','George Boole','Albert Einstein','Jeannette Wing'],correct:1,expl:'George Boole (siglo XIX).'},
+  {q:'La compuerta que invierte la entrada es…',opts:['AND','OR','NOT (inversor)','XOR'],correct:2,expl:'NOT o inversor: da vuelta el valor.'},
+  {q:'¿Cuánto vale 0 + 0 (OR)?',opts:['0','1','2','−1'],correct:0,expl:'Ninguna vale 1 → resultado 0.'},
+  {q:'¿Cuánto vale 0 · 0 (AND)?',opts:['0','1','2','10'],correct:0,expl:'No hay dos unos → 0.'},
+  {q:'La negación (NOT) de 0 es…',opts:['0','1','2','−1'],correct:1,expl:'¬0 = 1.'},
+  {q:'XOR (o exclusivo) da 1 cuando…',opts:['ambas son 1','ambas son 0','las entradas son distintas','nunca'],correct:2,expl:'XOR da 1 si A y B son diferentes.'},
+  {q:'¿Cuánto vale 1 + 1 en álgebra de Boole (OR)?',opts:['1','2','0','10'],correct:0,expl:'No es la suma común: en OR, 1 + 1 = 1.'},
+  {q:'Según De Morgan, ¬(A + B) es igual a…',opts:['¬A · ¬B','¬A + ¬B','A · B','A + B'],correct:0,expl:'¬(A+B) = ¬A · ¬B (el OR pasa a AND).'},
+  {q:'En Boole, ¿qué representa el 1?',opts:['falso / apagado','verdadero / encendido','un número cualquiera','el infinito'],correct:1,expl:'1 = verdadero / encendido; 0 = falso / apagado.'},
+  {q:'La operación AND también se llama…',opts:['disyunción','conjunción','negación','inversión'],correct:1,expl:'AND = conjunción (“y”).'},
+  {q:'La operación OR también se llama…',opts:['conjunción','disyunción','negación','identidad'],correct:1,expl:'OR = disyunción (“o”).'},
+  {q:'Por la ley de identidad, A · 1 = …',opts:['A','1','0','Ā'],correct:0,expl:'Multiplicar (AND) por 1 no cambia el valor: A · 1 = A.'}
+ ]},
+
+ e3:{title:'Examen 3 — Sistemas 2×2 y matrices', topic:'Sistemas, Cramer y determinantes', intro:'20 preguntas de sistemas de dos ecuaciones (sustitución, igualación, Cramer), matrices y determinantes.', questions:[
+  {q:'Un sistema de 2 ecuaciones con 2 incógnitas queda resuelto cuando encontramos…',opts:['un valor de x que cumple una ecuación','valores de x e y que cumplen ambas ecuaciones','cualquier par de números','solo el valor de y'],correct:1,expl:'La solución debe verificar las dos ecuaciones a la vez.'},
+  {q:'¿Cuál NO es un método para resolver sistemas 2×2?',opts:['sustitución','igualación','regla de Cramer','redondeo'],correct:3,expl:'El redondeo es de estadística, no un método de sistemas.'},
+  {q:'En el método de sustitución, el primer paso es…',opts:['despejar una incógnita en una ecuación','sumar las dos ecuaciones','calcular determinantes','graficar las rectas'],correct:0,expl:'Se despeja una incógnita y se reemplaza en la otra ecuación.'},
+  {q:'En el método de igualación se debe…',opts:['despejar la misma incógnita en ambas ecuaciones e igualar','multiplicar las ecuaciones','restar los términos independientes','elegir cualquier valor'],correct:0,expl:'Se despeja la misma incógnita en las dos y se igualan las expresiones.'},
+  {q:'El determinante de la matriz [[3, 1], [2, 4]] es…',opts:['10','14','11','−10'],correct:0,expl:'3·4 − 1·2 = 12 − 2 = 10.'},
+  {q:'¿Cómo se calcula un determinante 2×2?',opts:['a·d − b·c','a·b − c·d','a·d + b·c','a + d − b − c'],correct:0,expl:'Diagonal principal menos diagonal secundaria: a·d − b·c.'},
+  {q:'El determinante de [[2, 3], [1, 5]] es…',opts:['7','13','10','−7'],correct:0,expl:'2·5 − 3·1 = 10 − 3 = 7.'},
+  {q:'El determinante de [[4, 2], [6, 3]] es…',opts:['0','24','12','−12'],correct:0,expl:'4·3 − 2·6 = 12 − 12 = 0.'},
+  {q:'Si el determinante principal Δ es distinto de cero, el sistema tiene…',opts:['ninguna solución','infinitas soluciones','una única solución','dos soluciones'],correct:2,expl:'Δ ≠ 0 garantiza solución única (Cramer).'},
+  {q:'En el sistema { x + y = 5 ; x − y = 1 }, el determinante principal Δ es…',opts:['−2','2','0','−1'],correct:0,expl:'Δ = det[[1,1],[1,−1]] = 1·(−1) − 1·1 = −2.'},
+  {q:'En ese sistema { x + y = 5 ; x − y = 1 }, ¿cuánto vale x?',opts:['3','2','4','1'],correct:0,expl:'Sumando las ecuaciones: 2x = 6 → x = 3.'},
+  {q:'En ese mismo sistema, ¿cuánto vale y?',opts:['2','3','1','4'],correct:0,expl:'y = 5 − x = 5 − 3 = 2.'},
+  {q:'Un adulto paga $20 y un niño $12. Se vendieron 10 entradas por $176. Si x = adultos e y = niños, el sistema es…',opts:['x + y = 10 ; 20x + 12y = 176','x + y = 176 ; 20x + 12y = 10','x + y = 10 ; 12x + 20y = 176','20x + 20y = 10 ; x + y = 176'],correct:0,expl:'Una ecuación cuenta entradas y la otra cuenta el dinero.'},
+  {q:'Resolviendo ese sistema, ¿cuántas entradas de adulto se vendieron?',opts:['7','3','4','6'],correct:0,expl:'x = 7 (y 3 de niño): 20·7 + 12·3 = 140 + 36 = 176.'},
+  {q:'¿Y cuántas entradas de niño?',opts:['3','7','4','5'],correct:0,expl:'y = 3, con x = 7 suman 10 entradas.'},
+  {q:'Una matriz con 3 filas y 4 columnas es de orden…',opts:['3×4','4×3','12','7'],correct:0,expl:'Se escribe filas × columnas: 3×4.'},
+  {q:'Una matriz es cuadrada cuando…',opts:['tiene una sola fila','tiene igual cantidad de filas y columnas','tiene más columnas que filas','sus elementos son ceros'],correct:1,expl:'Filas = columnas (ej. 2×2, 3×3).'},
+  {q:'En D = [[5,2,7],[4,1,8],[3,9,6]], el elemento d21 (fila 2, columna 1) es…',opts:['4','2','8','3'],correct:0,expl:'Fila 2 = [4, 1, 8]; columna 1 → 4.'},
+  {q:'En esa misma matriz D, el elemento d32 (fila 3, columna 2) es…',opts:['9','3','6','8'],correct:0,expl:'Fila 3 = [3, 9, 6]; columna 2 → 9.'},
+  {q:'¿Qué método usa los determinantes Δ, Δx y Δy?',opts:['sustitución','igualación','regla de Cramer','tabla de frecuencias'],correct:2,expl:'Cramer: x = Δx/Δ, y = Δy/Δ.'}
+ ]},
+
+ e4:{title:'Examen 4 — Estadística', topic:'Media, mediana, moda y gráficos', intro:'20 preguntas de estadística: media ponderada desde gráficos, mediana, moda y promedios.', questions:[
+  {q:'La media o promedio se obtiene…',opts:['sumando todos los datos y dividiendo por la cantidad','eligiendo el valor que más se repite','tomando el valor del medio','sumando el mayor y el menor'],correct:0,expl:'Suma de datos ÷ cantidad de datos.'},
+  {q:'La moda de un conjunto de datos es…',opts:['el promedio','el valor que más se repite','el valor del medio','el valor más grande'],correct:1,expl:'La moda es el valor con mayor frecuencia.'},
+  {q:'La mediana es…',opts:['el valor que más se repite','el promedio de todos','el valor del medio al ordenar los datos','la suma total'],correct:2,expl:'Deja la mitad de los datos a cada lado.'},
+  {q:'En los datos 3, 5, 5, 9, la moda es…',opts:['5','5,5','9','3'],correct:0,expl:'El 5 se repite; 5,5 sería la media (distractor).'},
+  {q:'En los datos 4, 6, 8, la media es…',opts:['6','8','4','5,5'],correct:0,expl:'(4 + 6 + 8) ÷ 3 = 18 ÷ 3 = 6.'},
+  {q:'En los datos ordenados 2, 5, 7, 9, 12, la mediana es…',opts:['7','5','9','6,75'],correct:0,expl:'Con 5 datos, el del medio es el 7.'},
+  {q:'Un gráfico muestra la cantidad de hermanos de 20 chicos: 0→5, 1→8, 2→5, 3→2. El promedio es…',opts:['1,2','1,5','2','1'],correct:0,expl:'(0·5 + 1·8 + 2·5 + 3·2) ÷ 20 = 24 ÷ 20 = 1,2.'},
+  {q:'Con esos datos (hermanos), la moda es…',opts:['1','1,2','0','2'],correct:0,expl:'El valor 1 tiene la mayor frecuencia (8 chicos).'},
+  {q:'Con esos datos, ¿cuántos chicos se encuestaron en total?',opts:['20','4','15','24'],correct:0,expl:'5 + 8 + 5 + 2 = 20.'},
+  {q:'En 9 partidos los goles fueron: 0→1, 1→2, 2→2, 3→4. El promedio de goles por partido es…',opts:['2','2,5','3','1,5'],correct:0,expl:'(0·1 + 1·2 + 2·2 + 3·4) ÷ 9 = 18 ÷ 9 = 2.'},
+  {q:'Con esos datos (goles), la moda es…',opts:['3','2','2,25','9'],correct:0,expl:'El 3 aparece en 4 partidos: es el más frecuente.'},
+  {q:'Con esos datos (9 partidos), la mediana está en la posición (9+1)/2 = 5. ¿Cuál es?',opts:['2','3','2,5','1'],correct:0,expl:'Ordenados: 0,1,1,2,2,3,3,3,3. La posición 5 es 2.'},
+  {q:'Un jugador hizo 2 goles en cada uno de 3 partidos y 1 gol en cada uno de otros 2. Su promedio es…',opts:['1,6','1,5','2','3'],correct:0,expl:'(2·3 + 1·2) ÷ 5 = 8 ÷ 5 = 1,6. No es promediar 2 y 1.'},
+  {q:'Compró 2 kg a $100 el kg y 3 kg a $50 el kg. El precio promedio por kilo es…',opts:['$70','$75','$60','$50'],correct:0,expl:'(2·100 + 3·50) ÷ 5 = 350 ÷ 5 = 70. No es (100+50)/2.'},
+  {q:'En un gráfico de barras de frecuencias, la moda corresponde a…',opts:['la barra más alta','la barra más baja','la primera barra','el promedio de las barras'],correct:0,expl:'La barra más alta = el valor más frecuente.'},
+  {q:'La frecuencia absoluta de un valor es…',opts:['la cantidad de veces que aparece ese valor','el promedio','un porcentaje','el valor más grande'],correct:0,expl:'Cuántas veces se repite ese valor.'},
+  {q:'El subconjunto representativo que se estudia de una población se llama…',opts:['variable','muestra','frecuencia','moda'],correct:1,expl:'La muestra es una parte representativa de la población.'},
+  {q:'Se preguntó a 15 personas cuántas mascotas tienen: 0→2, 1→6, 2→4, 3→2, 4→1. El promedio es…',opts:['1,6','1','2','1,5'],correct:0,expl:'(0·2 + 1·6 + 2·4 + 3·2 + 4·1) ÷ 15 = 24 ÷ 15 = 1,6.'},
+  {q:'Con esos datos (mascotas), la mediana (posición 8) es…',opts:['1','2','1,6','0'],correct:0,expl:'Ordenados, la posición 8 cae en el valor 1.'},
+  {q:'Si la cantidad de datos es par, la mediana se calcula…',opts:['tomando el más repetido','promediando los dos valores centrales','sumando todo','tomando el primero'],correct:1,expl:'Con cantidad par se promedian los dos del medio.'}
+ ]},
+
+ e5:{title:'Examen 5 — Proporciones y porcentajes', topic:'Proporciones, regla de tres, %', intro:'20 preguntas de porcentajes, descuentos, proporcionalidad directa, regla de tres y redondeo.', questions:[
+  {q:'El 20% de 200 es…',opts:['40','20','100','2'],correct:0,expl:'200 · 0,20 = 40.'},
+  {q:'El 50% de 80 es…',opts:['40','80','20','160'],correct:0,expl:'La mitad de 80 es 40.'},
+  {q:'El 10% de 350 es…',opts:['35','3,5','350','50'],correct:0,expl:'350 ÷ 10 = 35.'},
+  {q:'Si el 100% son 300 personas, el 25% son…',opts:['75','100','25','150'],correct:0,expl:'La cuarta parte de 300 es 75.'},
+  {q:'Un producto cuesta $500 y tiene 20% de descuento. ¿Cuánto se descuenta?',opts:['$100','$80','$20','$400'],correct:0,expl:'20% de 500 = 100.'},
+  {q:'Ese producto de $500 con 20% off, ¿cuánto se paga?',opts:['$400','$100','$480','$300'],correct:0,expl:'500 − 100 = 400.'},
+  {q:'¿Cuánto es el 30% de $1500?',opts:['$450','$300','$150','$500'],correct:0,expl:'1500 · 0,30 = 450.'},
+  {q:'Si 3 kg de pan cuestan $600, ¿cuánto cuestan 5 kg?',opts:['$1000','$900','$1200','$800'],correct:0,expl:'1 kg = 600÷3 = 200; 5 kg = 5·200 = 1000.'},
+  {q:'La regla de tres simple directa se usa cuando dos magnitudes son…',opts:['directamente proporcionales','inversamente proporcionales','iguales','independientes'],correct:0,expl:'Al crecer una, crece la otra en la misma proporción.'},
+  {q:'Dos magnitudes son directamente proporcionales cuando…',opts:['al aumentar una, la otra disminuye','al multiplicar una por un número, la otra se multiplica por el mismo número','no tienen relación','siempre son iguales'],correct:1,expl:'Esa es la definición de proporcionalidad directa.'},
+  {q:'Si 4 lápices cuestan $80, ¿cuánto cuesta 1 lápiz?',opts:['$20','$80','$4','$40'],correct:0,expl:'80 ÷ 4 = 20.'},
+  {q:'Si 1 lápiz cuesta $20, ¿cuánto cuestan 7?',opts:['$140','$120','$20','$700'],correct:0,expl:'7 · 20 = 140.'},
+  {q:'De 250 productos, el 40% son importados. ¿Cuántos son importados?',opts:['100','40','250','150'],correct:0,expl:'250 · 0,40 = 100.'},
+  {q:'Un auto recorre 180 km con 12 litros. ¿Cuántos km recorre con 1 litro?',opts:['15','12','180','168'],correct:0,expl:'180 ÷ 12 = 15.'},
+  {q:'Con ese rendimiento (15 km/litro), ¿cuántos km recorre con 8 litros?',opts:['120','150','60','240'],correct:0,expl:'8 · 15 = 120.'},
+  {q:'El 5% de 2000 es…',opts:['100','50','200','500'],correct:0,expl:'2000 · 0,05 = 100.'},
+  {q:'De 40 estudiantes, 10 aprobaron. ¿Qué porcentaje aprobó?',opts:['25%','10%','40%','50%'],correct:0,expl:'10 ÷ 40 = 0,25 = 25%.'},
+  {q:'Redondeá 7,463 a dos cifras decimales.',opts:['7,46','7,47','7,5','7,4'],correct:0,expl:'La tercera cifra es 3 (0–4): la segunda queda igual → 7,46.'},
+  {q:'Redondeá 7,463 a una cifra decimal.',opts:['7,5','7,4','7,46','8'],correct:0,expl:'La segunda cifra es 6 (5–9): se suma 1 → 7,5.'},
+  {q:'Truncá (sin redondear) 7,463 a una cifra decimal.',opts:['7,4','7,5','7,46','7'],correct:0,expl:'Truncar = cortar sin mirar la cifra siguiente → 7,4.'}
+ ]},
+
+ e6:{title:'Examen 6 — Ecuaciones de primer grado', topic:'Ecuaciones y “adivinar el número”', intro:'20 preguntas: resolver ecuaciones y problemas del tipo “pensá un número”.', questions:[
+  {q:'Resolvé: x + 7 = 12.',opts:['5','19','7','12'],correct:0,expl:'x = 12 − 7 = 5.'},
+  {q:'Resolvé: 2x = 14.',opts:['7','28','12','16'],correct:0,expl:'x = 14 ÷ 2 = 7.'},
+  {q:'Resolvé: x − 5 = 10.',opts:['15','5','50','2'],correct:0,expl:'x = 10 + 5 = 15.'},
+  {q:'Resolvé: 3x + 2 = 20.',opts:['6','18','22','7'],correct:0,expl:'3x = 18 → x = 6.'},
+  {q:'Resolvé: 5x − 3 = 22.',opts:['5','25','19','4'],correct:0,expl:'5x = 25 → x = 5.'},
+  {q:'Resolvé: x ÷ 2 = 8.',opts:['16','4','8','10'],correct:0,expl:'x = 8 · 2 = 16.'},
+  {q:'Resolvé: 4x + 4 = 24.',opts:['5','20','7','6'],correct:0,expl:'4x = 20 → x = 5.'},
+  {q:'Resolvé: 2x + 6 = 20.',opts:['7','13','10','26'],correct:0,expl:'2x = 14 → x = 7.'},
+  {q:'Resolvé: 8x + 20 = x − 29.',opts:['−7','7','−49','49'],correct:0,expl:'7x = −49 → x = −7.'},
+  {q:'Resolvé: 6x = 42.',opts:['7','6','36','48'],correct:0,expl:'x = 42 ÷ 6 = 7.'},
+  {q:'Resolvé: 10 − 2x = 4.',opts:['3','−3','7','−7'],correct:0,expl:'−2x = −6 → x = 3.'},
+  {q:'Resolvé (con paréntesis): 3(x + 2) = 21.',opts:['5','7','19','6'],correct:0,expl:'x + 2 = 7 → x = 5.'},
+  {q:'Una ecuación como 2x − 4 = 0 se llama…',opts:['lineal o de primer grado','cuadrática','sistema','identidad'],correct:0,expl:'La x tiene exponente 1: es de primer grado.'},
+  {q:'¿Cuántas soluciones tiene una ecuación lineal con una incógnita?',opts:['ninguna','una única','dos','infinitas'],correct:1,expl:'Tiene exactamente una solución.'},
+  {q:'Pensá un número, multiplicalo por 4 y sumale 7; dio 43. ¿Qué número era?',opts:['9','36','50','7'],correct:0,expl:'4x + 7 = 43 → 4x = 36 → x = 9.'},
+  {q:'Pensá un número, sumale 5 y multiplicá todo por 3; dio 39.',opts:['8','13','34','6'],correct:0,expl:'3(x + 5) = 39 → x + 5 = 13 → x = 8.'},
+  {q:'Pensá un número, ×2, sumale 10, ×3 y restale el número pensado; dio 100.',opts:['14','10','20','7'],correct:0,expl:'3(2x + 10) − x = 100 → 5x + 30 = 100 → x = 14.'},
+  {q:'Pensá un número, ×6, sumale 12 y dividí todo por 3; dio 20.',opts:['8','20','16','6'],correct:0,expl:'(6x + 12) ÷ 3 = 20 → 2x + 4 = 20 → x = 8.'},
+  {q:'Pensá un número, sumale el cuadrado de tres (que es 9) y ×2; dio 30.',opts:['6','15','9','12'],correct:0,expl:'2(x + 9) = 30 → x + 9 = 15 → x = 6.'},
+  {q:'Pensá un número, calculá su doble, sumale 5 y restale 3; dio 14.',opts:['6','12','7','8'],correct:0,expl:'2x + 5 − 3 = 14 → 2x + 2 = 14 → x = 6.'}
+ ]},
+
+ e7:{title:'Examen 7 — Binario, potencias y enteros', topic:'Binario, potencias, ℤ, jerarquía', intro:'20 preguntas de potencias, sistema binario, números enteros y operaciones combinadas.', questions:[
+  {q:'¿Cuánto vale 2⁴?',opts:['16','8','6','32'],correct:0,expl:'2·2·2·2 = 16.'},
+  {q:'¿Cuánto vale 2⁵?',opts:['32','10','16','25'],correct:0,expl:'2·2·2·2·2 = 32.'},
+  {q:'¿Cuánto vale 2⁰?',opts:['1','0','2','no existe'],correct:0,expl:'Todo número (≠0) elevado a 0 da 1.'},
+  {q:'¿Cuánto vale 2¹?',opts:['2','1','0','4'],correct:0,expl:'Un número elevado a 1 es él mismo.'},
+  {q:'¿Cuánto vale (−4)³?',opts:['−64','64','−12','12'],correct:0,expl:'(−4)·(−4)·(−4) = 16·(−4) = −64 (exponente impar → negativo).'},
+  {q:'¿Cuánto vale (−5)²?',opts:['25','−25','−10','10'],correct:0,expl:'(−5)·(−5) = 25 (exponente par → positivo).'},
+  {q:'El sistema binario tiene base…',opts:['2','10','8','16'],correct:0,expl:'Usa potencias de base 2.'},
+  {q:'El sistema binario usa los dígitos…',opts:['0 y 1','0 al 9','1 y 2','0, 1 y 2'],correct:0,expl:'Solo dos símbolos: 0 y 1.'},
+  {q:'El decimal 5 en binario es…',opts:['101','110','111','011'],correct:0,expl:'5 = 4 + 1 → 101.'},
+  {q:'El decimal 8 en binario es…',opts:['1000','100','111','1010'],correct:0,expl:'8 = 2³ → 1000.'},
+  {q:'El binario 1010 en decimal es…',opts:['10','5','8','12'],correct:0,expl:'8 + 0 + 2 + 0 = 10.'},
+  {q:'El binario 111 en decimal es…',opts:['7','3','6','111'],correct:0,expl:'4 + 2 + 1 = 7.'},
+  {q:'Para pasar un decimal a binario se divide sucesivamente por…',opts:['2','10','la mitad','5'],correct:0,expl:'Se divide por 2 y se leen los restos de abajo hacia arriba.'},
+  {q:'El conjunto de los enteros (ℤ) incluye…',opts:['solo los positivos','los positivos, el cero y los negativos','los positivos y el cero','solo los negativos'],correct:1,expl:'ℤ = negativos, cero y positivos.'},
+  {q:'El sucesor (siguiente) de −3 es…',opts:['−2','−4','3','2'],correct:0,expl:'El siguiente entero mayor es −2.'},
+  {q:'El antecesor (anterior) de 0 es…',opts:['−1','1','0','−0'],correct:0,expl:'El entero anterior a 0 es −1.'},
+  {q:'¿Cuántos enteros hay entre −2 y 3 (sin los extremos)?',opts:['4','5','6','3'],correct:0,expl:'−1, 0, 1, 2 → cuatro números.'},
+  {q:'Aplicando la jerarquía: 2 + 3 · 4 = …',opts:['14','20','24','9'],correct:0,expl:'Primero 3·4 = 12; luego 2 + 12 = 14.'},
+  {q:'Aplicando la jerarquía: 10 − 2² = …',opts:['6','64','8','−6'],correct:0,expl:'Primero 2² = 4; luego 10 − 4 = 6.'},
+  {q:'En un cálculo combinado sin paréntesis, ¿qué se resuelve primero?',opts:['la potenciación y la radicación','la suma','la resta','la multiplicación'],correct:0,expl:'Orden: potencias/raíces, luego ·/÷, por último +/−.'}
+ ]},
+
+ e8:{title:'Examen 8 — Pensamiento Computacional', topic:'Pensamiento Computacional', intro:'20 preguntas sobre pensamiento computacional, sus habilidades y ejemplos.', questions:[
+  {q:'El pensamiento computacional, ¿es lo mismo que programar?',opts:['Sí, son sinónimos','No, es más amplio: programar es solo una de sus aplicaciones','Sí, solo sirve para computadoras','No, no tiene que ver con problemas'],correct:1,expl:'Programar lo requiere, pero su uso es mucho más amplio y cotidiano.'},
+  {q:'Según el material, el pensamiento computacional existe…',opts:['solo desde que hay computadoras','desde mucho antes que las computadoras','desde el año 2000','solo en la universidad'],correct:1,expl:'Es inherente al ser humano, anterior a las máquinas.'},
+  {q:'La autora pionera citada en el tema es…',opts:['Jeannette M. Wing','George Boole','Ana María Kauffman','Lewis Carroll'],correct:0,expl:'Jeannette M. Wing (Carnegie Mellon).'},
+  {q:'La metáfora del ordenador describe el proceso como…',opts:['input → procesamiento → output','causa → efecto','pregunta → respuesta','inicio → nudo → desenlace'],correct:0,expl:'Entra un problema, se procesa y sale una solución.'},
+  {q:'¿Cuál es una de las cinco habilidades del pensamiento computacional?',opts:['descomposición','conjugación verbal','regla de tres','fotosíntesis'],correct:0,expl:'Descomposición es una de las cinco.'},
+  {q:'Dividir un problema grande en partes más pequeñas se llama…',opts:['descomposición','abstracción','evaluación','generalización'],correct:0,expl:'Descomposición: partir el problema en subproblemas.'},
+  {q:'Identificar semejanzas o regularidades entre problemas es…',opts:['reconocimiento de patrones','descomposición','pensamiento algorítmico','evaluación'],correct:0,expl:'Reconocer patrones para reutilizar soluciones.'},
+  {q:'Crear una secuencia ordenada de pasos para resolver algo es…',opts:['pensamiento algorítmico','abstracción','evaluación','representación'],correct:0,expl:'Pensamiento algorítmico: definir los pasos.'},
+  {q:'Quedarse con lo esencial y dejar de lado los detalles que no importan es…',opts:['abstracción','descomposición','evaluación','patrones'],correct:0,expl:'Abstracción: separar lo relevante del ruido.'},
+  {q:'Analizar si una solución es correcta, eficiente o mejorable es…',opts:['evaluación','descomposición','abstracción','pensamiento algorítmico'],correct:0,expl:'Evaluación: revisar y mejorar la solución.'},
+  {q:'¿Cuántas habilidades básicas propone el material?',opts:['cinco','tres','diez','dos'],correct:0,expl:'Cinco habilidades interrelacionadas.'},
+  {q:'Un algoritmo es…',opts:['una secuencia ordenada de pasos para resolver un problema','un tipo de computadora','un número binario','un gráfico'],correct:0,expl:'Pasos ordenados que llevan a una solución.'},
+  {q:'En el procesamiento intervienen capacidades humanas como…',opts:['abstracción, creatividad y emocionalidad','solo cálculos numéricos','únicamente memoria','solo velocidad'],correct:0,expl:'Ahí la metáfora del ordenador “termina”.'},
+  {q:'“Pensar sobre nuestro propio pensamiento” se llama…',opts:['metarreflexión','programación','decodificación','abstracción'],correct:0,expl:'Metarreflexión (metacognición).'},
+  {q:'Para practicar con problemas concretos (abrir una lata), ¿hace falta computadora?',opts:['Sí, siempre','No, se puede sin códigos ni hardware','Solo con internet','Solo con un programa'],correct:1,expl:'Se ejercita sin ningún equipo, solo pensando.'},
+  {q:'Dividir “preparar un mate” en calentar agua, poner yerba y cebar es…',opts:['descomposición','evaluación','abstracción','generalización'],correct:0,expl:'Partir la tarea en pasos: descomposición.'},
+  {q:'Notar que 3+3+3+3 es lo mismo que 3×4 y aplicarlo a otros casos es…',opts:['generalización y reconocimiento de patrones','evaluación','pensamiento algorítmico','abstracción'],correct:0,expl:'Se detecta un patrón y se generaliza.'},
+  {q:'Un mapa de subte que ignora las calles y solo muestra estaciones aplica…',opts:['abstracción','descomposición','evaluación','patrones'],correct:0,expl:'Se queda con lo esencial: abstracción.'},
+  {q:'Escribir los pasos exactos y en orden de una receta es un ejemplo de…',opts:['pensamiento algorítmico','reconocimiento de patrones','evaluación','abstracción'],correct:0,expl:'Una receta es un algoritmo.'},
+  {q:'El pensamiento computacional es útil…',opts:['solo para programadores','solo en matemática','tanto en la vida cotidiana como en la formación académica','solo para computadoras'],correct:2,expl:'Sirve para tomar decisiones en muchos contextos.'}
+ ]},
+
+ e9:{title:'Examen 9 — Lengua', topic:'Narración, lenguaje y estrategias', intro:'20 preguntas sobre texto narrativo, representación, lenguaje y estrategias de lectura y escritura.', questions:[
+  {q:'La narración es…',opts:['la manera de contar una secuencia de acciones de personajes a lo largo del tiempo','una lista de definiciones','un cálculo matemático','una tabla de datos'],correct:0,expl:'Cuenta acciones de personajes en un intervalo de tiempo.'},
+  {q:'El narrador protagonista (participa de la acción) se opone al narrador…',opts:['omnisciente','secundario','temporal','coloquial'],correct:0,expl:'El omnisciente es ajeno a la acción y lo sabe todo.'},
+  {q:'¿Cuál es un elemento del texto narrativo?',opts:['el narrador','la ecuación','la moda','el determinante'],correct:0,expl:'Narrador, tiempo/espacio, trama, acción, personajes, marcadores.'},
+  {q:'Suele decirse que el motor de la historia es…',opts:['el conflicto','el título','la tipografía','el índice'],correct:0,expl:'El conflicto mueve y organiza la trama.'},
+  {q:'La estructura clásica de la narración organiza el relato en…',opts:['tres partes','una sola parte','cinco capítulos','dos columnas'],correct:0,expl:'Se organiza en tres partes que hacen evolucionar la trama.'},
+  {q:'Palabras como “ayer”, “hoy”, “mañana”, “anoche” son…',opts:['marcadores temporales','adjetivos calificativos','sustantivos propios','verbos'],correct:0,expl:'Marcadores que ubican una escena en el tiempo.'},
+  {q:'Los conectores temporales sirven para…',opts:['ubicar y ordenar las acciones en el tiempo','sumar cantidades','describir colores','nombrar personajes'],correct:0,expl:'Introducen construcciones temporales en el texto.'},
+  {q:'Los adverbios de tiempo (antes, después, luego)…',opts:['no se conjugan, son invariables','se conjugan como los verbos','son números','cambian según la persona'],correct:0,expl:'Los adverbios son invariables.'},
+  {q:'Reconstruir el sentido de un texto “con nuestras propias palabras” se llama…',opts:['paráfrasis','hipérbole','ortografía','conjugación'],correct:0,expl:'Parafrasear: reformular con palabras conocidas.'},
+  {q:'La hipérbole consiste en…',opts:['la exageración','la rima','la definición','la enumeración'],correct:0,expl:'Aumento o disminución excesiva como recurso.'},
+  {q:'“Te llamé un millón de veces” es un ejemplo de…',opts:['hipérbole','paráfrasis','marcador temporal','conector de orden'],correct:0,expl:'Es una exageración: hipérbole.'},
+  {q:'Mirar título, imágenes y epígrafe antes de leer todo el texto es…',opts:['lectura anticipatoria','paráfrasis','hipérbole','truncamiento'],correct:0,expl:'Lectura anticipatoria: aproximación previa al texto.'},
+  {q:'La comunicación puede ser verbal o…',opts:['no verbal','numérica','binaria','algorítmica'],correct:0,expl:'No verbal: gestos, señales, imágenes, sonidos.'},
+  {q:'Un ejemplo de comunicación no verbal es…',opts:['un gesto o una señal de tránsito','una carta escrita','una charla telefónica','un mensaje de texto'],correct:0,expl:'Usa signos que no son palabras.'},
+  {q:'Los títulos y subtítulos sirven para…',opts:['organizar la información y jerarquizar los temas','decorar la página','alargar el texto','confundir al lector'],correct:0,expl:'Ayudan a ubicar qué es más y menos importante.'},
+  {q:'Palabras como “primero”, “luego”, “por último” son…',opts:['conectores de orden','hipérboles','sustantivos','adverbios de lugar'],correct:0,expl:'Ordenan el texto de modo secuencial.'},
+  {q:'Para comprender una palabra desconocida conviene…',opts:['mirar el contexto y buscarla en el diccionario eligiendo la acepción adecuada','saltearla siempre','inventar un significado','borrar la oración'],correct:0,expl:'El contexto y el diccionario ayudan a elegir el sentido correcto.'},
+  {q:'¿Qué elemento indica en qué lugar y época ocurre la historia?',opts:['el tiempo y el espacio','la trama','el conflicto','el marcador'],correct:0,expl:'El tiempo y el espacio sitúan el relato.'},
+  {q:'Representar un pensamiento (en pintura, música, palabras) hace posible…',opts:['la comunicación','la potenciación','el redondeo','la descomposición'],correct:0,expl:'Al plasmar el pensamiento se lo puede comunicar.'},
+  {q:'Lo audiovisual y los “píxeles” requieren desarrollar…',opts:['el pensamiento crítico para decodificar los mensajes','solo memorizar','ignorar las pantallas','evitar la lectura'],correct:0,expl:'Hace falta leer más allá de lo evidente.'}
+ ]},
+
+ e10:{title:'Examen 10 — Integrador', topic:'Mezcla de todos los temas', intro:'20 preguntas que combinan Matemática, Pensamiento Computacional y Lengua. El repaso final.', questions:[
+  {q:'El decimal 5 en binario es…',opts:['101','110','111','011'],correct:0,expl:'5 = 4 + 1 → 101.'},
+  {q:'Resolvé: 2x + 6 = 20.',opts:['7','13','26','10'],correct:0,expl:'2x = 14 → x = 7.'},
+  {q:'La moda de 3, 5, 5, 9 es…',opts:['5','5,5','9','3'],correct:0,expl:'El 5 es el valor más repetido.'},
+  {q:'En f(x) = 2x − 1, ¿cuánto vale f(3)?',opts:['5','6','3','1'],correct:0,expl:'2·3 − 1 = 5.'},
+  {q:'¿Cuánto vale 0 · 1 (AND)?',opts:['1','0','10','2'],correct:1,expl:'AND necesita dos unos: da 0.'},
+  {q:'El binario 1010 en decimal es…',opts:['10','5','8','12'],correct:0,expl:'8 + 2 = 10.'},
+  {q:'El antecesor de −5 es…',opts:['−6','−4','4','5'],correct:0,expl:'El entero anterior es −6.'},
+  {q:'Aplicando la jerarquía: 2 + 3 · 4 = …',opts:['14','20','24','9'],correct:0,expl:'3·4 = 12; 2 + 12 = 14.'},
+  {q:'La ordenada al origen de f(x) = −2x + 7 es…',opts:['7','−2','2','0'],correct:0,expl:'b = 7 (corte con el eje y).'},
+  {q:'Según De Morgan, ¬(A + B) = …',opts:['¬A · ¬B','¬A + ¬B','A · B','A + B'],correct:0,expl:'El OR pasa a AND al negar.'},
+  {q:'El 25% de 200 es…',opts:['50','25','75','100'],correct:0,expl:'La cuarta parte de 200 es 50.'},
+  {q:'En Lengua, el motor de la historia es…',opts:['el conflicto','el título','el índice','la tipografía'],correct:0,expl:'El conflicto impulsa la trama.'},
+  {q:'Dividir un problema en partes más pequeñas se llama…',opts:['descomposición','abstracción','evaluación','patrones'],correct:0,expl:'Es la descomposición.'},
+  {q:'¿Cuánto vale 2⁵?',opts:['32','10','16','25'],correct:0,expl:'2·2·2·2·2 = 32.'},
+  {q:'El determinante de [[2, 1], [3, 4]] es…',opts:['5','11','8','−5'],correct:0,expl:'2·4 − 1·3 = 8 − 3 = 5.'},
+  {q:'Si 2 kg cuestan $300, ¿cuánto cuestan 5 kg?',opts:['$750','$600','$900','$500'],correct:0,expl:'1 kg = 150; 5 kg = 750.'},
+  {q:'“Te llamé un millón de veces” es un ejemplo de…',opts:['hipérbole','paráfrasis','conector','adverbio'],correct:0,expl:'Es una exageración.'},
+  {q:'La raíz de f(x) = 2x − 8 es…',opts:['4','8','−8','2'],correct:0,expl:'2x − 8 = 0 → x = 4.'},
+  {q:'La media de 4, 6, 8 es…',opts:['6','8','4','5,5'],correct:0,expl:'18 ÷ 3 = 6.'},
+  {q:'La autora pionera del pensamiento computacional es…',opts:['Jeannette Wing','George Boole','Lewis Carroll','Ana Kauffman'],correct:0,expl:'Jeannette M. Wing.'}
+ ]},
+
+ e11:{title:'Examen 11 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°1: ejercicios de varios pasos, ecuaciones con incógnita en ambos lados, sistemas de Cramer y estadística leída de un gráfico.', questions:[
+  {q:'Resolvé: 5x − 3 = 2x + 12.',opts:['5','3','15','−5'],correct:0,expl:'Paso todo: 5x − 2x = 12 + 3 → 3x = 15 → x = 5.'},
+  {q:'Pensá un número: multiplicalo por 5, restale 8, multiplicá por 2 y sumale el número pensado; dio 50. ¿Qué número era?',opts:['6','5','8','7'],correct:0,expl:'2(5x − 8) + x = 50 → 11x − 16 = 50 → 11x = 66 → x = 6.'},
+  {q:'En el sistema { 2x + 3y = 13 ; 4x − y = 5 }, el determinante principal Δ es…',opts:['−14','14','10','−10'],correct:0,expl:'Δ = 2·(−1) − 3·4 = −2 − 12 = −14.'},
+  {q:'En ese sistema, ¿cuánto vale x?',opts:['2','3','1','4'],correct:0,expl:'Δx = −28; x = Δx/Δ = −28 ÷ −14 = 2.'},
+  {q:'Una recta pasa por los puntos (1, 5) y (3, 11). ¿Cuál es su pendiente?',opts:['3','2','6','4'],correct:0,expl:'m = (11 − 5) ÷ (3 − 1) = 6 ÷ 2 = 3.'},
+  {q:'El número decimal 23 en binario es…',opts:['10111','11011','10101','11101'],correct:0,expl:'16 + 4 + 2 + 1 = 23 → 10111.'},
+  {q:'Si f(x) = 2x − 3, ¿cuánto vale f(f(2))?',opts:['−1','1','5','2'],correct:0,expl:'f(2) = 1; luego f(1) = 2·1 − 3 = −1.'},
+  {q:'Un producto de $2000 tiene un 15% de descuento. ¿Cuánto se paga?',opts:['$1700','$1850','$300','$1985'],correct:0,expl:'Descuento: 15% de 2000 = 300; se paga 2000 − 300 = 1700.'},
+  {q:'Notas de 20 alumnos: 4→2, 5→3, 6→5, 7→6, 8→3, 9→1. ¿Cuál es el promedio?',opts:['6,4','6,5','7','6'],correct:0,expl:'(4·2+5·3+6·5+7·6+8·3+9·1) ÷ 20 = 128 ÷ 20 = 6,4.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['7','6','8','6,4'],correct:0,expl:'El 7 tiene la mayor frecuencia (6 alumnos).'},
+  {q:'Con esos mismos datos, ¿cuál es la mediana?',opts:['6,5','6','7','6,4'],correct:0,expl:'Con 20 datos, se promedian las posiciones 10 y 11: (6 + 7) ÷ 2 = 6,5.'},
+  {q:'En Boole, con A=1, B=0, C=1: ¿cuánto vale A·B + C?',opts:['1','0','2','10'],correct:0,expl:'A·B = 0; 0 + C = 0 + 1 = 1.'},
+  {q:'Resolvé: 4(x − 2) = 2x + 6.',opts:['7','1','14','−7'],correct:0,expl:'4x − 8 = 2x + 6 → 2x = 14 → x = 7.'},
+  {q:'¿Cuánto vale (−2)³ + 4?',opts:['−4','4','12','−12'],correct:0,expl:'(−2)³ = −8; −8 + 4 = −4.'},
+  {q:'Una remera cuesta $1200 con el 25% de descuento ya aplicado. ¿Cuánto costaba antes?',opts:['$1600','$1500','$1440','$900'],correct:0,expl:'$1200 es el 75% del precio original: 1200 ÷ 0,75 = 1600.'},
+  {q:'Aplicando la jerarquía: 20 − 2 · 3² = …',opts:['2','162','6','14'],correct:0,expl:'3² = 9; 2·9 = 18; 20 − 18 = 2.'},
+  {q:'General $30 y socio (20% off) $24. Se vendieron 50 entradas por $1320. ¿Cuántas de socio?',opts:['30','20','25','15'],correct:0,expl:'g+s=50 y 30g+24s=1320 → 6s=180 → s=30 socios (y 20 generales).'},
+  {q:'Simplificá en Boole: A + A·B = …',opts:['A','B','A·B','1'],correct:0,expl:'Por absorción, A + A·B = A.'},
+  {q:'Un texto donde el narrador dice “yo caminaba por la calle” tiene un narrador…',opts:['protagonista','omnisciente','ajeno a la acción','secundario'],correct:0,expl:'Habla en primera persona y participa: es protagonista.'},
+  {q:'Reconocer que varios problemas comparten la misma estructura para resolverlos igual es…',opts:['generalización y reconocimiento de patrones','abstracción','evaluación','descomposición'],correct:0,expl:'Se detecta un patrón común y se generaliza la solución.'}
+ ]},
+
+ e12:{title:'Examen 12 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°2: porcentajes encadenados, porcentaje inverso, sistemas de Cramer y promedios ponderados.', questions:[
+  {q:'Resolvé: 3(x + 4) − 2x = 20.',opts:['8','20','4','12'],correct:0,expl:'3x + 12 − 2x = 20 → x + 12 = 20 → x = 8.'},
+  {q:'Pensá un número: restale 5 y multiplicá por 4; dio −12. ¿Qué número era?',opts:['2','−2','7','3'],correct:0,expl:'4(x − 5) = −12 → x − 5 = −3 → x = 2.'},
+  {q:'En el sistema { 3x + y = 11 ; 2x + 3y = 12 }, el determinante Δ es…',opts:['7','−7','9','11'],correct:0,expl:'Δ = 3·3 − 1·2 = 9 − 2 = 7.'},
+  {q:'En ese sistema, ¿cuánto vale y?',opts:['2','3','1','4'],correct:0,expl:'Δy = 14; y = 14 ÷ 7 = 2.'},
+  {q:'La recta f(x) = mx + b pasa por (0, 4) y (2, 10). ¿Cuánto vale m?',opts:['3','2','4','6'],correct:0,expl:'b = 4; 10 = 2m + 4 → 2m = 6 → m = 3.'},
+  {q:'El decimal 45 en binario es…',opts:['101101','110101','101011','111001'],correct:0,expl:'32 + 8 + 4 + 1 = 45 → 101101.'},
+  {q:'Un precio subió 10% y quedó en $3300. ¿Cuál era el precio original?',opts:['$3000','$2970','$3630','$2700'],correct:0,expl:'$3300 es el 110% del original: 3300 ÷ 1,10 = 3000.'},
+  {q:'El 8% de un número es 40. ¿Cuál es el número?',opts:['500','320','48','5000'],correct:0,expl:'número = 40 ÷ 0,08 = 500.'},
+  {q:'El binario 11011 en decimal es…',opts:['27','26','25','29'],correct:0,expl:'16 + 8 + 0 + 2 + 1 = 27.'},
+  {q:'En Boole, con A=1, B=1: ¿cuánto vale ¬(A·B) + A?',opts:['1','0','2','A'],correct:0,expl:'A·B = 1; ¬1 = 0; 0 + A = 0 + 1 = 1.'},
+  {q:'Resolvé: 5(x − 1) = 3(x + 3).',opts:['7','2','14','−7'],correct:0,expl:'5x − 5 = 3x + 9 → 2x = 14 → x = 7.'},
+  {q:'Un artículo de $5000 tiene dos descuentos: primero 10% y luego 20% sobre el nuevo precio. ¿Precio final?',opts:['$3600','$3500','$4400','$3900'],correct:0,expl:'5000·0,90 = 4500; 4500·0,80 = 3600. (No es 30% off.)'},
+  {q:'En 4 partidos metió 3 goles y en otros 6 metió 9. ¿Promedio de goles por partido en los 10?',opts:['1,2','1,125','1,5','0,75'],correct:0,expl:'(3 + 9) ÷ 10 = 12 ÷ 10 = 1,2. No se promedian los promedios.'},
+  {q:'Un alumno saca 8 en un parcial que vale 70% y 5 en otro que vale 30%. ¿Promedio ponderado?',opts:['7,1','6,5','7','6,9'],correct:0,expl:'8·0,70 + 5·0,30 = 5,6 + 1,5 = 7,1.'},
+  {q:'¿Cuánto vale (−3)·(−4) + 2?',opts:['14','−10','10','−14'],correct:0,expl:'(−3)·(−4) = 12; 12 + 2 = 14.'},
+  {q:'¿Para qué valor de x, f(x) = 3x − 12 vale 6?',opts:['6','2','18','−2'],correct:0,expl:'3x − 12 = 6 → 3x = 18 → x = 6.'},
+  {q:'Mezcla: café $800/kg y té $500/kg. 10 kg cuestan $6800. ¿Cuántos kg de café hay?',opts:['6','4','5','7'],correct:0,expl:'c+t=10 y 800c+500t=6800 → 300c=1800 → c=6.'},
+  {q:'Simplificá en Boole: A·(A + B) = …',opts:['A','B','A+B','1'],correct:0,expl:'Por absorción, A·(A + B) = A.'},
+  {q:'“Le dije mil veces que ordene” usa como recurso…',opts:['hipérbole','paráfrasis','conector de orden','marcador temporal'],correct:0,expl:'Es una exageración: hipérbole.'},
+  {q:'Al terminar de resolver algo, revisar si hay una forma más eficiente es la habilidad de…',opts:['evaluación','abstracción','descomposición','patrones'],correct:0,expl:'Evaluación: revisar y mejorar la solución.'}
+ ]},
+
+ e13:{title:'Examen 13 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°3: Cramer completo, conversiones binarias grandes, potencias y porcentajes.', questions:[
+  {q:'Resolvé: 2x + 5 = 5x − 7.',opts:['4','12','−4','2'],correct:0,expl:'5 + 7 = 5x − 2x → 12 = 3x → x = 4.'},
+  {q:'Pensá un número: sumale 4, multiplicá por 3 y restale el doble del número pensado; dio 21.',opts:['9','21','3','12'],correct:0,expl:'3(x + 4) − 2x = 21 → x + 12 = 21 → x = 9.'},
+  {q:'En el sistema { 5x − 2y = 4 ; 3x + 4y = 18 }, el determinante Δ es…',opts:['26','14','20','−26'],correct:0,expl:'Δ = 5·4 − (−2)·3 = 20 + 6 = 26.'},
+  {q:'En ese sistema, ¿cuánto vale x?',opts:['2','3','4','1'],correct:0,expl:'Δx = 52; x = 52 ÷ 26 = 2.'},
+  {q:'En ese sistema, ¿cuánto vale y?',opts:['3','2','4','1'],correct:0,expl:'Δy = 78; y = 78 ÷ 26 = 3.'},
+  {q:'El binario 100101 en decimal es…',opts:['37','35','41','45'],correct:0,expl:'32 + 4 + 1 = 37.'},
+  {q:'De 250 estudiantes, 60 desaprobaron. ¿Qué porcentaje aprobó?',opts:['76%','24%','60%','40%'],correct:0,expl:'Aprobaron 190; 190 ÷ 250 = 0,76 = 76%.'},
+  {q:'¿Cuánto vale 2⁸?',opts:['256','128','64','512'],correct:0,expl:'2 multiplicado ocho veces = 256.'},
+  {q:'En Boole, con A=0, B=1: ¿cuánto vale A + ¬B?',opts:['0','1','2','10'],correct:0,expl:'¬B = 0; A + 0 = 0 + 0 = 0.'},
+  {q:'Resolvé: 6x − (2x + 8) = 12.',opts:['5','20','3','−5'],correct:0,expl:'6x − 2x − 8 = 12 → 4x = 20 → x = 5.'},
+  {q:'Una recta pasa por (2, 3) y (5, 12). ¿Cuál es su pendiente?',opts:['3','9','4','2'],correct:0,expl:'m = (12 − 3) ÷ (5 − 2) = 9 ÷ 3 = 3.'},
+  {q:'Si f(x) = −2x + 8, ¿cuál es su raíz?',opts:['4','8','−4','16'],correct:0,expl:'−2x + 8 = 0 → 2x = 8 → x = 4.'},
+  {q:'Tengo 12 billetes de $100 y $500 que suman $2800. ¿Cuántos son de $500?',opts:['4','8','6','5'],correct:0,expl:'x+y=12 y 100x+500y=2800 → 400y=1600 → y=4.'},
+  {q:'Aplicando la jerarquía: 12 ÷ 4 + 2 · 3 = …',opts:['9','12','15','7'],correct:0,expl:'12÷4 = 3; 2·3 = 6; 3 + 6 = 9.'},
+  {q:'En Boole, ¿cuánto vale 1 ⊕ 1 (XOR)?',opts:['0','1','2','11'],correct:0,expl:'XOR da 1 solo si las entradas son distintas; acá son iguales → 0.'},
+  {q:'Para pasar un decimal a binario se divide por 2 y se leen los restos…',opts:['de abajo hacia arriba','de arriba hacia abajo','de izquierda a derecha','al azar'],correct:0,expl:'El último resto obtenido es la primera cifra.'},
+  {q:'Un precio bajó de $4000 a $3000. ¿Qué porcentaje se descontó?',opts:['25%','30%','10%','75%'],correct:0,expl:'Descuento de $1000 sobre $4000 = 1000 ÷ 4000 = 25%.'},
+  {q:'Simplificá en Boole: ¬(¬A) = …',opts:['A','¬A','0','1'],correct:0,expl:'La doble negación se cancela: ¬(¬A) = A.'},
+  {q:'“Primero leí, después subrayé y por último resumí” usa…',opts:['conectores de orden','hipérbole','marcadores temporales','adverbios de lugar'],correct:0,expl:'Ordenan el texto de modo secuencial: conectores de orden.'},
+  {q:'Hacer un plano simplificado de una casa quedándote solo con las paredes principales es…',opts:['abstracción','descomposición','evaluación','patrones'],correct:0,expl:'Se conserva lo esencial y se ignoran los detalles: abstracción.'}
+ ]},
+
+ e14:{title:'Examen 14 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°4: determinantes, mezclas, aumentos porcentuales y jerarquía con negativos.', questions:[
+  {q:'Resolvé: 7x − 4 = 3x + 16.',opts:['5','20','4','−5'],correct:0,expl:'4x = 20 → x = 5.'},
+  {q:'Pensá un número: multiplicalo por 2, sumale 6 y multiplicá por 3; dio 60.',opts:['7','20','10','6'],correct:0,expl:'3(2x + 6) = 60 → 2x + 6 = 20 → x = 7.'},
+  {q:'En el sistema { 2x + 3y = 13 ; 4x − y = 5 }, ¿cuánto vale y?',opts:['3','2','1','4'],correct:0,expl:'Δy = −42; y = −42 ÷ −14 = 3.'},
+  {q:'El determinante de [[3, 5], [2, 4]] es…',opts:['2','22','12','−2'],correct:0,expl:'3·4 − 5·2 = 12 − 10 = 2.'},
+  {q:'El determinante de [[6, 4], [3, 5]] es…',opts:['18','42','30','−18'],correct:0,expl:'6·5 − 4·3 = 30 − 12 = 18.'},
+  {q:'El decimal 30 en binario es…',opts:['11110','11100','10110','11010'],correct:0,expl:'16 + 8 + 4 + 2 = 30 → 11110.'},
+  {q:'Un producto de $8000 con 35% de descuento se paga…',opts:['$5200','$2800','$5000','$4800'],correct:0,expl:'8000 · 0,65 = 5200.'},
+  {q:'El 12% de un número es 72. ¿Cuál es el número?',opts:['600','864','60','6000'],correct:0,expl:'72 ÷ 0,12 = 600.'},
+  {q:'En Boole, con A=1, B=0, C=0: ¿cuánto vale A·(B + C)?',opts:['0','1','2','10'],correct:0,expl:'B + C = 0; A·0 = 0.'},
+  {q:'Resolvé: 2(x + 3) − 4 = 3x − 5.',opts:['7','2','−7','5'],correct:0,expl:'2x + 2 = 3x − 5 → 7 = x.'},
+  {q:'Una recta con pendiente 4 pasa por (0, −3). ¿Cuánto vale f(2)?',opts:['5','8','−3','11'],correct:0,expl:'f(x) = 4x − 3; f(2) = 8 − 3 = 5.'},
+  {q:'¿Cuánto vale (−4)² − 3 · 5?',opts:['1','−31','31','−1'],correct:0,expl:'(−4)² = 16; 3·5 = 15; 16 − 15 = 1.'},
+  {q:'Un gráfico muestra: valor 10→3 personas, 20→5, 30→2. ¿Cuál es el promedio?',opts:['19','20','60','15'],correct:0,expl:'(10·3 + 20·5 + 30·2) ÷ 10 = 190 ÷ 10 = 19.'},
+  {q:'Con esos mismos datos, ¿cuántas personas hay en total?',opts:['10','60','3','19'],correct:0,expl:'3 + 5 + 2 = 10.'},
+  {q:'¿Cuánto vale −5 + 8 − 3?',opts:['0','16','6','−10'],correct:0,expl:'−5 + 8 = 3; 3 − 3 = 0.'},
+  {q:'Tengo 15 billetes de $100 y $500 que suman $3900. ¿Cuántos son de $500?',opts:['6','9','5','7'],correct:0,expl:'x+y=15 y 100x+500y=3900 → 400y=2400 → y=6.'},
+  {q:'Un precio subió 20% y quedó en $6000. ¿Cuál era el original?',opts:['$5000','$4800','$7200','$5800'],correct:0,expl:'6000 ÷ 1,20 = 5000.'},
+  {q:'Simplificá en Boole: A·1 + A·0 = …',opts:['A','0','1','2A'],correct:0,expl:'A·1 = A y A·0 = 0; A + 0 = A.'},
+  {q:'El elemento del texto narrativo que indica en qué lugar y época ocurre es…',opts:['el tiempo y el espacio','la trama','el narrador','el conflicto'],correct:0,expl:'El tiempo y el espacio sitúan la historia.'},
+  {q:'Dividir “organizar un viaje” en reservar pasajes, hotel y armar itinerario es…',opts:['descomposición','abstracción','evaluación','patrones'],correct:0,expl:'Se parte el problema en subtareas: descomposición.'}
+ ]},
+
+ e15:{title:'Examen 15 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°5: descuentos encadenados, funciones compuestas, mezclas y De Morgan.', questions:[
+  {q:'Resolvé: 10 − 3x = x − 6.',opts:['4','16','−4','2'],correct:0,expl:'10 + 6 = x + 3x → 16 = 4x → x = 4.'},
+  {q:'Pensá un número: sumale el cuadrado de cuatro (16) y multiplicá por 2; dio 50.',opts:['9','25','16','18'],correct:0,expl:'2(x + 16) = 50 → x + 16 = 25 → x = 9.'},
+  {q:'En el sistema { 3x + y = 11 ; 2x + 3y = 12 }, ¿cuánto vale x?',opts:['3','2','1','4'],correct:0,expl:'Δ = 7 y Δx = 21; x = 21 ÷ 7 = 3.'},
+  {q:'El determinante de [[4, 3], [2, 5]] es…',opts:['14','26','20','−14'],correct:0,expl:'4·5 − 3·2 = 20 − 6 = 14.'},
+  {q:'El decimal 50 en binario es…',opts:['110010','101010','110100','100110'],correct:0,expl:'32 + 16 + 2 = 50 → 110010.'},
+  {q:'El binario 101010 en decimal es…',opts:['42','40','44','21'],correct:0,expl:'32 + 8 + 2 = 42.'},
+  {q:'Un artículo de $10000 con dos descuentos, 20% y luego 10%. ¿Precio final?',opts:['$7200','$7000','$8000','$3000'],correct:0,expl:'10000·0,80 = 8000; 8000·0,90 = 7200.'},
+  {q:'El 5% de un número es 15. ¿Cuál es el número?',opts:['300','75','20','3000'],correct:0,expl:'15 ÷ 0,05 = 300.'},
+  {q:'En Boole, con A=1, B=1, C=0: ¿cuánto vale (A·B) + C?',opts:['1','0','2','10'],correct:0,expl:'A·B = 1; 1 + 0 = 1.'},
+  {q:'Resolvé: 3x + 7 = x + 19.',opts:['6','12','−6','13'],correct:0,expl:'2x = 12 → x = 6.'},
+  {q:'Una recta pasa por (−1, 2) y (2, 11). ¿Cuál es su pendiente?',opts:['3','9','4','−3'],correct:0,expl:'m = (11 − 2) ÷ (2 − (−1)) = 9 ÷ 3 = 3.'},
+  {q:'Si f(x) = 4x − 1, ¿cuánto vale f(f(1))?',opts:['11','3','7','15'],correct:0,expl:'f(1) = 3; luego f(3) = 4·3 − 1 = 11.'},
+  {q:'¿Cuánto vale 2³ + 3²?',opts:['17','13','36','25'],correct:0,expl:'8 + 9 = 17.'},
+  {q:'Notas de 20 alumnos: 5→4, 6→6, 7→8, 8→2. ¿Cuál es el promedio?',opts:['6,4','6,5','7','6'],correct:0,expl:'(5·4 + 6·6 + 7·8 + 8·2) ÷ 20 = 128 ÷ 20 = 6,4.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['7','6','8','6,4'],correct:0,expl:'El 7 aparece 8 veces: es el más frecuente.'},
+  {q:'Mezcla: harina $200/kg y azúcar $300/kg. 8 kg cuestan $1900. ¿Cuántos kg de azúcar?',opts:['3','5','4','6'],correct:0,expl:'h+a=8 y 200h+300a=1900 → 100a=300 → a=3.'},
+  {q:'Un precio con 20% off quedó en $2400. ¿Cuánto costaba antes?',opts:['$3000','$2880','$2000','$3200'],correct:0,expl:'$2400 es el 80% del original: 2400 ÷ 0,80 = 3000.'},
+  {q:'Por De Morgan, ¬(A · B · C) queda con los términos…',opts:['negados y unidos por OR','iguales y unidos por AND','sin cambios','multiplicados'],correct:0,expl:'La negación entra: ¬A + ¬B + ¬C.'},
+  {q:'“Ayer, hoy, mañana, anoche” son…',opts:['marcadores temporales','conectores de orden','adjetivos','verbos'],correct:0,expl:'Con su sola mención ubican una escena en el tiempo.'},
+  {q:'Notar que la serie 2, 4, 6, 8 sigue una regla y predecir el siguiente es usar…',opts:['reconocimiento de patrones','descomposición','evaluación','abstracción'],correct:0,expl:'Se detecta la regularidad y se generaliza.'}
+ ]},
+
+ e16:{title:'Examen 16 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°6: aumentos, porcentaje inverso, mediana desde datos ordenados y Boole con negaciones.', questions:[
+  {q:'Resolvé: 4x − 9 = x + 6.',opts:['5','15','−5','3'],correct:0,expl:'3x = 15 → x = 5.'},
+  {q:'Pensá un número: multiplicalo por 3, sumale 2, multiplicá por 2 y restale el número; dio 49.',opts:['9','49','5','8'],correct:0,expl:'2(3x + 2) − x = 49 → 5x + 4 = 49 → 5x = 45 → x = 9.'},
+  {q:'En el sistema { 5x − 2y = 4 ; 3x + 4y = 18 }, el determinante Δ es…',opts:['26','14','20','−26'],correct:0,expl:'Δ = 5·4 − (−2)·3 = 20 + 6 = 26.'},
+  {q:'El determinante de [[2, 6], [1, 5]] es…',opts:['4','16','10','−4'],correct:0,expl:'2·5 − 6·1 = 10 − 6 = 4.'},
+  {q:'El decimal 19 en binario es…',opts:['10011','11001','10101','10001'],correct:0,expl:'16 + 2 + 1 = 19 → 10011.'},
+  {q:'El binario 11001 en decimal es…',opts:['25','24','26','19'],correct:0,expl:'16 + 8 + 1 = 25.'},
+  {q:'Un sueldo de $400000 aumenta 12%. ¿Cuál es el nuevo sueldo?',opts:['$448000','$412000','$480000','$44800'],correct:0,expl:'400000 · 1,12 = 448000.'},
+  {q:'El 40% de un número es 100. ¿Cuál es el número?',opts:['250','40','140','2500'],correct:0,expl:'100 ÷ 0,40 = 250.'},
+  {q:'En Boole, con A=0, B=0: ¿cuánto vale ¬A · ¬B?',opts:['1','0','2','10'],correct:0,expl:'¬A = 1 y ¬B = 1; 1 · 1 = 1.'},
+  {q:'Resolvé: 2(3x − 1) = 4x + 8.',opts:['5','10','3','−5'],correct:0,expl:'6x − 2 = 4x + 8 → 2x = 10 → x = 5.'},
+  {q:'Una recta pasa por (0, 6) y (3, 0). ¿Cuál es su pendiente?',opts:['−2','2','6','−6'],correct:0,expl:'m = (0 − 6) ÷ (3 − 0) = −6 ÷ 3 = −2.'},
+  {q:'¿Cuánto vale (−2)⁴ + (−3)²?',opts:['25','7','−7','13'],correct:0,expl:'16 + 9 = 25 (ambos exponentes pares → positivos).'},
+  {q:'Un alumno saca 9 (parcial 60%) y 6 (parcial 40%). ¿Promedio ponderado?',opts:['7,8','7,5','8','7'],correct:0,expl:'9·0,60 + 6·0,40 = 5,4 + 2,4 = 7,8.'},
+  {q:'Edades ordenadas de 7 personas: 12, 14, 15, 15, 18, 20, 22. ¿Cuál es la mediana?',opts:['15','16','18','15,7'],correct:0,expl:'Con 7 datos, la mediana es la posición 4: el valor 15.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['15','12','22','16'],correct:0,expl:'El 15 es el único valor que se repite.'},
+  {q:'General $50 y socio (20% off). Se vendieron 40 entradas por $1720. ¿Cuántas de socio?',opts:['28','12','20','30'],correct:0,expl:'Socio = $40. g+s=40 y 50g+40s=1720 → 10s=280 → s=28.'},
+  {q:'Un precio con 25% off quedó en $4500. ¿Cuál era el original?',opts:['$6000','$5625','$5000','$3375'],correct:0,expl:'$4500 es el 75%: 4500 ÷ 0,75 = 6000.'},
+  {q:'Simplificá en Boole: A + Ā = …',opts:['1','0','A','Ā'],correct:0,expl:'Un valor o su negación cubren todo: A + Ā = 1.'},
+  {q:'Reconstruir con nuestras propias palabras el sentido de un texto se llama…',opts:['paráfrasis','hipérbole','conector','marcador'],correct:0,expl:'Parafrasear: reformular con palabras conocidas.'},
+  {q:'Escribir el instructivo exacto y ordenado para armar un mueble es…',opts:['pensamiento algorítmico','abstracción','evaluación','patrones'],correct:0,expl:'Un instructivo es un algoritmo: pasos en orden.'}
+ ]},
+
+ e17:{title:'Examen 17 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°7: Cramer con Δ negativo, aumentos sucesivos, promedios ponderados y conversiones.', questions:[
+  {q:'Resolvé: 8x − 5 = 5x + 10.',opts:['5','15','−5','3'],correct:0,expl:'3x = 15 → x = 5.'},
+  {q:'Pensá un número: sumale 7, multiplicá por 2 y restale el número; dio 20.',opts:['6','20','14','7'],correct:0,expl:'2(x + 7) − x = 20 → x + 14 = 20 → x = 6.'},
+  {q:'En el sistema { 2x + 5y = 16 ; 3x − 2y = 5 }, el determinante Δ es…',opts:['−19','19','−11','11'],correct:0,expl:'Δ = 2·(−2) − 5·3 = −4 − 15 = −19.'},
+  {q:'En ese sistema, ¿cuánto vale x?',opts:['3','2','1','4'],correct:0,expl:'Δx = −57; x = −57 ÷ −19 = 3.'},
+  {q:'El decimal 37 en binario es…',opts:['100101','101001','100011','110101'],correct:0,expl:'32 + 4 + 1 = 37 → 100101.'},
+  {q:'El binario 110110 en decimal es…',opts:['54','52','48','27'],correct:0,expl:'32 + 16 + 4 + 2 = 54.'},
+  {q:'Un precio de $2000 sube 10% y luego 10% otra vez. ¿Precio final?',opts:['$2420','$2400','$2200','$2440'],correct:0,expl:'2000·1,10 = 2200; 2200·1,10 = 2420.'},
+  {q:'El 15% de un número es 45. ¿Cuál es el número?',opts:['300','45','15','3000'],correct:0,expl:'45 ÷ 0,15 = 300.'},
+  {q:'En Boole, con A=1, B=0, C=1: ¿cuánto vale (A + B) · C?',opts:['1','0','2','10'],correct:0,expl:'A + B = 1; 1 · C = 1 · 1 = 1.'},
+  {q:'Resolvé: 5(x − 2) = 3(x + 2).',opts:['8','2','16','−8'],correct:0,expl:'5x − 10 = 3x + 6 → 2x = 16 → x = 8.'},
+  {q:'Una recta pasa por (1, −1) y (4, 8). ¿Cuál es su pendiente?',opts:['3','9','−3','2'],correct:0,expl:'m = (8 − (−1)) ÷ (4 − 1) = 9 ÷ 3 = 3.'},
+  {q:'Aplicando la jerarquía: 30 − 4 · 2³ = …',opts:['−2','2','208','−16'],correct:0,expl:'2³ = 8; 4·8 = 32; 30 − 32 = −2.'},
+  {q:'Datos: 2→5, 3→8, 4→4, 5→3 (total 20). ¿Cuál es el promedio?',opts:['3,25','3,5','3','4'],correct:0,expl:'(2·5 + 3·8 + 4·4 + 5·3) ÷ 20 = 65 ÷ 20 = 3,25.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['3','4','5','3,25'],correct:0,expl:'El 3 aparece 8 veces: es el más frecuente.'},
+  {q:'¿Cuánto vale −8 + 3 − (−5)?',opts:['0','−10','6','−16'],correct:0,expl:'−8 + 3 = −5; −5 − (−5) = −5 + 5 = 0.'},
+  {q:'Café $700/kg y té $400/kg. 12 kg cuestan $6600. ¿Cuántos kg de café?',opts:['6','5','7','4'],correct:0,expl:'700c + 400(12 − c) = 6600 → 300c = 1800 → c = 6.'},
+  {q:'Un precio con 30% off quedó en $2100. ¿Cuál era el original?',opts:['$3000','$2730','$2800','$3100'],correct:0,expl:'$2100 es el 70%: 2100 ÷ 0,70 = 3000.'},
+  {q:'Simplificá en Boole: A · A = …',opts:['A','A²','0','1'],correct:0,expl:'Por idempotencia, A · A = A.'},
+  {q:'El elemento de la narración que abre interrogantes y mueve la trama es…',opts:['el conflicto','el título','el marcador','el índice'],correct:0,expl:'El conflicto es el motor de la historia.'},
+  {q:'Comparar dos soluciones y elegir la más eficiente es la habilidad de…',opts:['evaluación','descomposición','abstracción','patrones'],correct:0,expl:'Evaluación.'}
+ ]},
+
+ e18:{title:'Examen 18 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°8: Cramer, ecuaciones con paréntesis y resta, promedios ponderados de tres notas y estadística.', questions:[
+  {q:'Resolvé: 6x + 2 = 3x + 17.',opts:['5','15','−5','3'],correct:0,expl:'3x = 15 → x = 5.'},
+  {q:'Pensá un número: multiplicalo por 4, restale 3 y multiplicá por 2; dio 42.',opts:['6','21','24','5'],correct:0,expl:'2(4x − 3) = 42 → 4x − 3 = 21 → 4x = 24 → x = 6.'},
+  {q:'En el sistema { 4x + 3y = 18 ; 2x − y = 4 }, el determinante Δ es…',opts:['−10','10','−2','2'],correct:0,expl:'Δ = 4·(−1) − 3·2 = −4 − 6 = −10.'},
+  {q:'En ese sistema, ¿cuánto vale y?',opts:['2','3','1','4'],correct:0,expl:'Δy = −20; y = −20 ÷ −10 = 2.'},
+  {q:'El decimal 26 en binario es…',opts:['11010','10110','11100','10101'],correct:0,expl:'16 + 8 + 2 = 26 → 11010.'},
+  {q:'El binario 111100 en decimal es…',opts:['60','56','62','30'],correct:0,expl:'32 + 16 + 8 + 4 = 60.'},
+  {q:'Un producto de $12000 con 25% de descuento se paga…',opts:['$9000','$3000','$8000','$9600'],correct:0,expl:'12000 · 0,75 = 9000.'},
+  {q:'El 20% de un número es 90. ¿Cuál es el número?',opts:['450','18','110','4500'],correct:0,expl:'90 ÷ 0,20 = 450.'},
+  {q:'En Boole, con A=0, B=1, C=1: ¿cuánto vale A + (B·C)?',opts:['1','0','2','10'],correct:0,expl:'B·C = 1; A + 1 = 0 + 1 = 1.'},
+  {q:'Resolvé: 3(2x − 1) − x = 4x + 3.',opts:['6','3','−6','5'],correct:0,expl:'6x − 3 − x = 4x + 3 → 5x − 3 = 4x + 3 → x = 6.'},
+  {q:'En f(x) = mx + b, si al aumentar x en 1 la y aumenta en 4, ¿cuánto vale m?',opts:['4','1','0','−4'],correct:0,expl:'La pendiente es cuánto cambia y por cada unidad de x: m = 4.'},
+  {q:'¿Cuánto vale (−5)² − 4 · 3?',opts:['13','37','−13','−37'],correct:0,expl:'25 − 12 = 13.'},
+  {q:'Un alumno saca 7 (50%), 8 (30%) y 5 (20%). ¿Promedio ponderado?',opts:['6,9','6,7','7','6,5'],correct:0,expl:'7·0,5 + 8·0,3 + 5·0,2 = 3,5 + 2,4 + 1 = 6,9.'},
+  {q:'Goles en 9 partidos: 0→2, 1→3, 2→3, 3→1. ¿Cuál es la mediana (posición 5)?',opts:['1','2','1,5','0'],correct:0,expl:'Ordenados: 0,0,1,1,1,2,2,2,3. La posición 5 es 1.'},
+  {q:'Con esos mismos datos, ¿cuál es el promedio de goles?',opts:['1,33','1,5','1','2'],correct:0,expl:'(0·2 + 1·3 + 2·3 + 3·1) ÷ 9 = 12 ÷ 9 ≈ 1,33.'},
+  {q:'14 billetes de $100 y $1000 suman $5000. ¿Cuántos son de $1000?',opts:['4','10','5','6'],correct:0,expl:'x+y=14 y 100x+1000y=5000 → 900y=3600 → y=4.'},
+  {q:'Un precio con 40% off quedó en $1800. ¿Cuál era el original?',opts:['$3000','$2520','$2500','$4500'],correct:0,expl:'$1800 es el 60%: 1800 ÷ 0,60 = 3000.'},
+  {q:'Simplificá en Boole: A · (A + B) = …',opts:['A','B','A+B','1'],correct:0,expl:'Por absorción, A · (A + B) = A.'},
+  {q:'“Le expliqué el cuento con mis propias palabras” es un ejemplo de…',opts:['paráfrasis','hipérbole','conector','marcador'],correct:0,expl:'Reformular con palabras propias: paráfrasis.'},
+  {q:'El pensamiento computacional, ¿requiere siempre una computadora?',opts:['No, se puede practicar sin hardware','Sí, siempre','Solo con internet','Solo programando'],correct:0,expl:'Se ejercita con problemas concretos, sin códigos ni equipos.'}
+ ]},
+
+ e19:{title:'Examen 19 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°9: sistema con solución cero, potencias de 2, problemas con parte fija y descuentos grandes.', questions:[
+  {q:'Resolvé: 9x − 7 = 4x + 18.',opts:['5','25','−5','3'],correct:0,expl:'5x = 25 → x = 5.'},
+  {q:'Pensá un número: sumale 5, multiplicá por 3 y restale el doble del número; dio 24.',opts:['9','24','15','3'],correct:0,expl:'3(x + 5) − 2x = 24 → x + 15 = 24 → x = 9.'},
+  {q:'En el sistema { 3x + 2y = 12 ; 5x − 2y = 20 }, el determinante Δ es…',opts:['−16','16','−4','4'],correct:0,expl:'Δ = 3·(−2) − 2·5 = −6 − 10 = −16.'},
+  {q:'En ese sistema, ¿cuánto vale x?',opts:['4','2','3','5'],correct:0,expl:'Sumando las ecuaciones: 8x = 32 → x = 4.'},
+  {q:'En ese sistema, ¿cuánto vale y?',opts:['0','1','2','4'],correct:0,expl:'3·4 + 2y = 12 → 2y = 0 → y = 0.'},
+  {q:'El decimal 41 en binario es…',opts:['101001','100101','110001','101011'],correct:0,expl:'32 + 8 + 1 = 41 → 101001.'},
+  {q:'El binario 1000000 en decimal es…',opts:['64','32','128','100'],correct:0,expl:'Es 2⁶ = 64.'},
+  {q:'Un artículo de $6000 con dos descuentos, 50% y luego 10%. ¿Precio final?',opts:['$2700','$3000','$2400','$3600'],correct:0,expl:'6000·0,50 = 3000; 3000·0,90 = 2700.'},
+  {q:'En Boole, con A=1, B=1, C=1: ¿cuánto vale (A·B) + ¬C?',opts:['1','0','2','10'],correct:0,expl:'A·B = 1; ¬C = 0; 1 + 0 = 1.'},
+  {q:'Resolvé: 4(x + 1) = 2(x + 5).',opts:['3','6','−3','7'],correct:0,expl:'4x + 4 = 2x + 10 → 2x = 6 → x = 3.'},
+  {q:'Una recta pasa por (2, 7) y (5, 16). ¿Cuál es su pendiente?',opts:['3','9','2','−3'],correct:0,expl:'m = (16 − 7) ÷ (5 − 2) = 9 ÷ 3 = 3.'},
+  {q:'Aplicando la jerarquía: 50 − 3 · (2 + 4) = …',opts:['32','282','44','24'],correct:0,expl:'Paréntesis primero: 2+4 = 6; 3·6 = 18; 50 − 18 = 32.'},
+  {q:'Datos: 1→6, 2→9, 3→5 (total 20). ¿Cuál es el promedio?',opts:['1,95','2','1,5','2,5'],correct:0,expl:'(1·6 + 2·9 + 3·5) ÷ 20 = 39 ÷ 20 = 1,95.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['2','3','1','1,95'],correct:0,expl:'El 2 aparece 9 veces: es el más frecuente.'},
+  {q:'¿Cuánto vale (−6) ÷ 2 + 5?',opts:['2','−8','8','−2'],correct:0,expl:'−6÷2 = −3; −3 + 5 = 2.'},
+  {q:'Un pintor cobra $500 fijos más $200 por hora. Si cobró $2100, ¿cuántas horas trabajó?',opts:['8','10','4','6'],correct:0,expl:'500 + 200h = 2100 → 200h = 1600 → h = 8.'},
+  {q:'Un precio con 60% off quedó en $1200. ¿Cuál era el original?',opts:['$3000','$1920','$2000','$720'],correct:0,expl:'$1200 es el 40%: 1200 ÷ 0,40 = 3000.'},
+  {q:'Por De Morgan, ¬(A + B) = …',opts:['¬A · ¬B','¬A + ¬B','A · B','A + B'],correct:0,expl:'La negación entra y el OR pasa a AND.'},
+  {q:'Un narrador que NO participa de la historia y conoce todo lo que pasa es…',opts:['omnisciente','protagonista','testigo interno','secundario'],correct:0,expl:'El omnisciente es ajeno a la acción y lo sabe todo.'},
+  {q:'Detectar que muchas contraseñas siguen el patrón “nombre + año” para adivinar otras es usar…',opts:['reconocimiento de patrones','descomposición','evaluación','abstracción'],correct:0,expl:'Se identifica una regularidad y se generaliza.'}
+ ]},
+
+ e20:{title:'Examen 20 — Integrador (nivel ingreso)', topic:'Integrador · dificultad real', hard:true, intro:'Nivel ingreso N°10: el más completo. Cramer, funciones, porcentaje inverso, simplificación de Boole y estadística con 25 datos.', questions:[
+  {q:'Resolvé: 7x − 2 = 4x + 13.',opts:['5','15','−5','3'],correct:0,expl:'3x = 15 → x = 5.'},
+  {q:'Pensá un número: multiplicalo por 3, sumale 4, multiplicá por 2 y restale el número pensado; dio 58.',opts:['10','58','8','9'],correct:0,expl:'2(3x + 4) − x = 58 → 5x + 8 = 58 → 5x = 50 → x = 10.'},
+  {q:'En el sistema { 2x + 3y = 12 ; 4x − 3y = 6 }, el determinante Δ es…',opts:['−18','18','−6','6'],correct:0,expl:'Δ = 2·(−3) − 3·4 = −6 − 12 = −18.'},
+  {q:'En ese sistema, ¿cuánto vale x?',opts:['3','2','1','4'],correct:0,expl:'Sumando las ecuaciones: 6x = 18 → x = 3.'},
+  {q:'En ese sistema, ¿cuánto vale y?',opts:['2','3','1','0'],correct:0,expl:'2·3 + 3y = 12 → 3y = 6 → y = 2.'},
+  {q:'El decimal 63 en binario es…',opts:['111111','101111','111101','110111'],correct:0,expl:'32 + 16 + 8 + 4 + 2 + 1 = 63 → 111111.'},
+  {q:'El binario 1010101 en decimal es…',opts:['85','84','86','42'],correct:0,expl:'64 + 16 + 4 + 1 = 85.'},
+  {q:'Un sueldo de $500000 tiene un aumento del 10% y luego un descuento del 10%. ¿Cuánto queda?',opts:['$495000','$500000','$505000','$450000'],correct:0,expl:'500000·1,10 = 550000; 550000·0,90 = 495000 (queda menos).'},
+  {q:'En Boole, con A=1, B=0: ¿cuánto vale ¬(A + B) + A?',opts:['1','0','2','10'],correct:0,expl:'A + B = 1; ¬1 = 0; 0 + A = 0 + 1 = 1.'},
+  {q:'Resolvé: 3x − 2(x − 4) = 2x − 1.',opts:['9','8','−9','7'],correct:0,expl:'3x − 2x + 8 = 2x − 1 → x + 8 = 2x − 1 → x = 9.'},
+  {q:'Si f(x) = 2x + 1, ¿para qué valor de x se cumple f(x) = x + 7?',opts:['6','7','8','3'],correct:0,expl:'2x + 1 = x + 7 → x = 6.'},
+  {q:'¿Cuánto vale (−3)³ + 5²?',opts:['−2','52','2','−52'],correct:0,expl:'(−3)³ = −27; 5² = 25; −27 + 25 = −2.'},
+  {q:'Un alumno saca 10 (30%), 6 (30%) y 7 (40%). ¿Promedio ponderado?',opts:['7,6','7,5','8','7'],correct:0,expl:'10·0,3 + 6·0,3 + 7·0,4 = 3 + 1,8 + 2,8 = 7,6.'},
+  {q:'Notas de 25 alumnos: 4→3, 5→5, 6→7, 7→6, 8→4. ¿Cuál es la mediana (posición 13)?',opts:['6','7','5','6,5'],correct:0,expl:'Acumulando: hasta el 6 llegan las posiciones 9 a 15. La posición 13 es 6.'},
+  {q:'Con esos mismos datos, ¿cuál es la moda?',opts:['6','7','5','8'],correct:0,expl:'El 6 aparece 7 veces: es el más frecuente.'},
+  {q:'Un plan cuesta $3000 fijos más $50 por GB. Si la factura fue $4500, ¿cuántos GB usó?',opts:['30','25','15','20'],correct:0,expl:'3000 + 50g = 4500 → 50g = 1500 → g = 30.'},
+  {q:'Un producto tuvo un aumento del 25% y ahora cuesta $5000. ¿Cuánto costaba antes?',opts:['$4000','$3750','$4500','$6250'],correct:0,expl:'$5000 es el 125%: 5000 ÷ 1,25 = 4000.'},
+  {q:'Simplificá en Boole: (A · B) + (A · ¬B) = …',opts:['A','B','A·B','1'],correct:0,expl:'A·(B + ¬B) = A·1 = A.'},
+  {q:'Cortar el texto en título, subtítulos y párrafos para ver qué es más importante trabaja la…',opts:['organización textual (jerarquía)','hipérbole','paráfrasis','oralidad'],correct:0,expl:'Reconocer la jerarquía textual mediante títulos y subtítulos.'},
+  {q:'Partís un problema en subproblemas, buscás patrones, te quedás con lo esencial y armás los pasos. ¿Qué habilidad NO estás usando explícitamente ahí?',opts:['evaluación','descomposición','reconocimiento de patrones','abstracción'],correct:0,expl:'Faltó revisar/mejorar la solución: esa es la evaluación.'}
+ ]}
+};
+
+/* ---------- Navegación ---------- */
+const EXAM_KEYS = Object.keys(EXAMS);
+const tabs = document.querySelectorAll('nav.tabs button');
+function show(id){
+  document.querySelectorAll('section.view').forEach(v=>v.classList.toggle('active', v.id===id));
+  const topTab = EXAM_KEYS.includes(id) ? 'examenes' : id;
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===topTab));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.goto)));
+
+/* ---------- Lista de exámenes ---------- */
+const list = document.getElementById('exam-list');
+EXAM_KEYS.forEach((key,i)=>{
+  const d=EXAMS[key];
+  const btn=document.createElement('button');
+  btn.className='home-card'+(d.hard?' hard':'');
+  btn.innerHTML=(d.hard?`<span class="badge-hard">Dificultad real</span>`:'')+
+    `<div class="k">EXAMEN ${i+1} · ${d.questions.length} PREGUNTAS</div>`+
+    `<h4>${d.topic}</h4><p>${d.intro.replace(/^\d+ preguntas[^.]*\.\s*/,'')||d.intro}</p>`+
+    `<span class="go">Comenzar →</span>`;
+  btn.addEventListener('click',()=>show(key));
+  list.appendChild(btn);
+});
+
+/* ---------- Render de cada examen ---------- */
+const host=document.getElementById('exam-host');
+function letter(i){return String.fromCharCode(97+i);}
+EXAM_KEYS.forEach(key=>{
+  const d=EXAMS[key], total=d.questions.length;
+  const sec=document.createElement('section');
+  sec.className='view'; sec.id=key;
+  let h=`<button class="back-btn" onclick="show('examenes')">← Volver a exámenes</button>`;
+  h+=`<div class="exam-head${d.hard?' hard':''}">`+(d.hard?`<span class="badge-hard">Dificultad real · nivel ingreso</span>`:'')+
+     `<h3>${d.title}</h3><p>${d.intro}</p>`+
+     `<span class="counter" id="${key}-count">Respondidas: 0 / ${total}</span></div>`;
+  d.questions.forEach((it,qi)=>{
+    h+=`<div class="q${d.hard?' hard':''}" id="${key}-q${qi}"><p class="q-text"><span class="q-num">${qi+1}</span><span>${it.q}</span></p>`;
+    it.opts.forEach((opt,oi)=>{
+      h+=`<label class="opt"><input type="radio" name="${key}-q${qi}" value="${oi}">`+
+         `<span class="opt-mark">${letter(oi)}</span><span class="opt-text">${opt}</span></label>`;
+    });
+    h+=`<div class="feedback" hidden></div></div>`;
+  });
+  h+=`<div class="exam-actions"><button class="btn-primary" onclick="gradeExam('${key}')">Corregir examen</button>`+
+     `<button class="btn-ghost" onclick="resetExam('${key}')">Reiniciar</button></div>`;
+  h+=`<div class="result" id="${key}-result" hidden></div>`;
+  sec.innerHTML=h;
+  host.appendChild(sec);
+  sec.addEventListener('change',()=>updateCount(key));
+});
+
+function updateCount(key){
+  const total=EXAMS[key].questions.length;
+  let answered=0;
+  for(let qi=0;qi<total;qi++){
+    if(document.querySelector(`input[name="${key}-q${qi}"]:checked`)) answered++;
+  }
+  document.getElementById(key+'-count').textContent=`Respondidas: ${answered} / ${total}`;
+}
+
+/* ---------- Corregir ---------- */
+function gradeExam(key){
+  const d=EXAMS[key]; let ok=0;
+  d.questions.forEach((it,qi)=>{
+    const qEl=document.getElementById(`${key}-q${qi}`);
+    const opts=qEl.querySelectorAll('.opt');
+    const fb=qEl.querySelector('.feedback');
+    const chosen=qEl.querySelector('input:checked');
+    opts.forEach(o=>{o.classList.remove('correct','incorrect');o.classList.add('locked');});
+    opts[it.correct].classList.add('correct');
+    let isOk=false;
+    if(chosen){const ci=parseInt(chosen.value); if(ci===it.correct){isOk=true;ok++;} else opts[ci].classList.add('incorrect');}
+    fb.hidden=false;
+    fb.className='feedback '+(isOk?'fb-ok':'fb-no');
+    const head=isOk?'¡Correcto!':(chosen?'Incorrecto.':'Sin responder.');
+    fb.innerHTML=`<strong>${head}</strong> ${it.expl}`;
+  });
+  showResult(key,ok,d.questions.length);
+}
+
+/* ---------- Resultado ---------- */
+function showResult(key,ok,total){
+  const pct=Math.round(ok/total*100);
+  const r=54,c=2*Math.PI*r,off=c*(1-pct/100);
+  const color=pct>=70?'#1F9E6E':(pct>=50?'#E8951C':'#D64550');
+  let msg;
+  if(pct>=90)msg='Excelente, dominás el tema.';
+  else if(pct>=70)msg='Muy bien. Repasá las que fallaste y quedás fino.';
+  else if(pct>=50)msg='Vas por buen camino. Volvé a la teoría de lo que falló.';
+  else msg='Es práctica: releé la teoría y reintentá. Tenés intentos ilimitados.';
+  const el=document.getElementById(key+'-result');
+  el.hidden=false;
+  el.innerHTML=`<svg class="ring" width="140" height="140" viewBox="0 0 140 140">
+     <circle cx="70" cy="70" r="${r}" fill="none" stroke="#ECEBFA" stroke-width="14"/>
+     <circle cx="70" cy="70" r="${r}" fill="none" stroke="${color}" stroke-width="14" stroke-linecap="round"
+       stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" transform="rotate(-90 70 70)"/>
+     <text x="70" y="66" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="30" fill="${color}">${pct}%</text>
+     <text x="70" y="90" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#4A5069">${ok}/${total}</text>
+   </svg>
+   <div class="msg"><h4 class="score-txt" style="color:${color}">${ok} de ${total} correctas</h4><p>${msg}</p></div>`;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ---------- Reiniciar ---------- */
+function resetExam(key){
+  EXAMS[key].questions.forEach((it,qi)=>{
+    const qEl=document.getElementById(`${key}-q${qi}`);
+    qEl.querySelectorAll('.opt').forEach(o=>o.classList.remove('correct','incorrect','locked'));
+    qEl.querySelectorAll('input').forEach(i=>i.checked=false);
+    const fb=qEl.querySelector('.feedback');fb.hidden=true;fb.innerHTML='';
+  });
+  document.getElementById(key+'-result').hidden=true;
+  updateCount(key);
+  document.getElementById(key).scrollIntoView({behavior:'smooth',block:'start'});
+}
+</script>
+</body>
+</html>
